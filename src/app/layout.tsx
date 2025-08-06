@@ -1,13 +1,15 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
-import { Toaster } from '@/components/ui/sonner'
 import { ThemeProvider } from 'next-themes'
+import { AuthProvider } from '@/contexts/AuthContext'
+import { Toaster } from '@/components/ui/sonner'
+import { SessionExpiredModalWrapper } from '@/components/auth/SessionExpiredModalWrapper'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'TRS - Transport Reporting System',
+  title: 'TRS Frontend',
   description: 'Transport Reporting System',
 }
 
@@ -20,8 +22,11 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className} suppressHydrationWarning>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          {children}
-          <Toaster />
+          <AuthProvider>
+            {children}
+            <SessionExpiredModalWrapper />
+            <Toaster />
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

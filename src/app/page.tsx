@@ -9,6 +9,7 @@ export default function HomePage() {
   useEffect(() => {
     // Check if user is logged in
     const user = localStorage.getItem('user')
+    console.log('user', user)
     if (user) {
       router.push('/dashboard')
     } else {

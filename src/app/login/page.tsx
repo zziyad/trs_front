@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -9,35 +8,24 @@ import { Label } from '@/components/ui/label'
 import { Container } from '@/components/layout/Container'
 import { Plane, Eye, EyeOff } from 'lucide-react'
 import { toast } from 'sonner'
+import { useAuth } from '@/contexts/AuthContext'
+import Link from 'next/link'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
-  const router = useRouter()
+  const { login, isLoading } = useAuth()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setIsLoading(true)
-
-    // Mock authentication - in real app this would call your API
-    setTimeout(() => {
-      if (email && password) {
-        // Store mock user session
-        localStorage.setItem('user', JSON.stringify({
-          id: 1,
-          email: email,
-          name: 'Demo User'
-        }))
-        
-        toast.success('Login successful!')
-        router.push('/dashboard')
-      } else {
-        toast.error('Please enter valid credentials')
-      }
-      setIsLoading(false)
-    }, 1000)
+    
+    try {
+      await login({ email, password })
+      toast.success('Login successful!')
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Login failed')
+    }
   }
 
   return (
@@ -104,10 +92,10 @@ export default function LoginPage() {
             </form>
 
             <div className="mt-6 text-center text-sm text-muted-foreground">
-              <p>Demo Credentials:</p>
-              <p className="font-mono text-xs mt-1">
-                Email: demo@example.com<br />
-                Password: any password
+              <p>Don't have an account?{' '}
+                <Link href="/register" className="text-primary hover:underline">
+                  Sign up
+                </Link>
               </p>
             </div>
           </CardContent>

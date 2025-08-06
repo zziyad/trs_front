@@ -1,223 +1,222 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { SimpleLayout } from '@/components/layout/SimpleLayout'
-import { 
-  Calendar, 
-  Users, 
-  Plane, 
-  TrendingUp,
-  LogOut
-} from 'lucide-react'
-import { toast } from 'sonner'
+import { Container } from '@/components/layout/Container'
+import { Plane, LogOut, User, Clock } from 'lucide-react'
+import { useAuth } from '@/contexts/AuthContext'
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute'
+// import { useState, useEffect } from 'react'
 
-interface Event {
-  event_id: number
-  name: string
-  start_date?: string
-  end_date?: string
-  description?: string
-  status: 'active' | 'completed' | 'upcoming'
-}
+// interface SessionAnalytics {
+//   totalSessions: number
+//   activeSessions: number
+//   redisSessions: number
+//   memorySessions: number
+//   totalActive: number
+//   uptime: number
+//   lastUpdated: string
+// }
 
-interface DashboardStats {
-  totalEvents: number
-  activeEvents: number
-  totalPassengers: number
-  totalFlights: number
-}
+export default function DashboardPage() {
+  const { user, logout } = useAuth()
+  console.log('user', user)
+  // const [analytics, setAnalytics] = useState<SessionAnalytics | null>(null)
+  // const [isLoadingAnalytics, setIsLoadingAnalytics] = useState(false)
 
-export default function Dashboard() {
-  const [events] = useState<Event[]>([
-    {
-      event_id: 1,
-      name: "Summer Aviation Conference 2024",
-      start_date: "2024-07-15",
-      end_date: "2024-07-17",
-      description: "Annual aviation industry conference",
-      status: "active"
-    },
-    {
-      event_id: 2,
-      name: "Airport Security Workshop",
-      start_date: "2024-08-20",
-      end_date: "2024-08-22",
-      description: "Security protocols and best practices",
-      status: "upcoming"
-    },
-    {
-      event_id: 3,
-      name: "Flight Operations Training",
-      start_date: "2024-06-10",
-      end_date: "2024-06-12",
-      description: "Flight operations and safety training",
-      status: "completed"
-    }
-  ])
-
-  const [stats] = useState<DashboardStats>({
-    totalEvents: 3,
-    activeEvents: 1,
-    totalPassengers: 1250,
-    totalFlights: 45
-  })
-
-  const router = useRouter()
-
-  useEffect(() => {
-    // Check if user is logged in
-    const user = localStorage.getItem('user')
-    if (!user) {
-      router.push('/login')
-    }
-  }, [router])
-
-  const handleLogout = () => {
-    localStorage.removeItem('user')
-    toast.success('Logged out successfully')
-    router.push('/login')
-  }
-
-  const handleEventClick = (eventId: number) => {
-    router.push(`/events/${eventId}`)
-  }
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'active':
-        return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
-      case 'upcoming':
-        return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300'
-      case 'completed':
-        return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300'
-      default:
-        return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300'
+  const handleLogout = async () => {
+    try {
+      await logout()
+    } catch (error) {
+      console.error('Logout failed:', error)
     }
   }
+
+  // const fetchAnalytics = async () => {
+  //   try {
+  //     setIsLoadingAnalytics(true)
+  //     const response = await fetch('/api/auth/analytics', {
+  //       method: 'POST',
+  //       headers: { 'Content-Type': 'application/json' },
+  //       body: JSON.stringify({}),
+  //     })
+      
+  //     if (!response.ok) {
+  //       throw new Error(`HTTP error! status: ${response.status}`)
+  //     }
+      
+  //     const data = await response.json()
+  //     console.log('Analytics response:', data)
+      
+  //     if (data.result && data.result.status === 'fulfilled') {
+  //       setAnalytics(data.result.response)
+  //     } else {
+  //       console.error('Analytics failed:', data)
+  //     }
+  //   } catch (error) {
+  //     console.error('Failed to fetch analytics:', error)
+  //   } finally {
+  //     setIsLoadingAnalytics(false)
+  //   }
+  // }
+
+  // useEffect(() => {
+  //   fetchAnalytics()
+  //   // Refresh analytics every 30 seconds
+  //   const interval = setInterval(fetchAnalytics, 30000)
+  //   return () => clearInterval(interval)
+  // }, [])
+
+  // const formatUptime = (seconds: number) => {
+  //   const hours = Math.floor(seconds / 3600)
+  //   const minutes = Math.floor((seconds % 3600) / 60)
+  //   return `${hours}h ${minutes}m`
+  // }
 
   return (
-    <SimpleLayout
-      title="Dashboard"
-      subtitle="Transport Reporting System Overview"
-    >
-      <div className="space-y-6">
-        {/* Welcome Section */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight">Welcome back!</h1>
-            <p className="text-muted-foreground">
-              Here&apos;s what&apos;s happening with your events today.
-            </p>
+    <ProtectedRoute>
+      <div className="min-h-screen bg-background">
+        <Container className="py-8">
+          <div className="flex justify-between items-center mb-8">
+            <div className="flex items-center space-x-3">
+              <Plane className="h-8 w-8 text-primary" />
+              <h1 className="text-3xl font-bold">Transport Reporting System</h1>
+            </div>
+            <Button onClick={handleLogout} variant="outline">
+              <LogOut className="h-4 w-4 mr-2" />
+              Logout
+            </Button>
           </div>
-          <Button onClick={handleLogout} variant="outline">
-            <LogOut className="mr-2 h-4 w-4" />
-            Logout
-          </Button>
-        </div>
 
-        {/* Stats Cards */}
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Events</CardTitle>
-              <Calendar className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.totalEvents}</div>
-              <p className="text-xs text-muted-foreground">
-                +2 from last month
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Active Events</CardTitle>
-              <TrendingUp className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.activeEvents}</div>
-              <p className="text-xs text-muted-foreground">
-                Currently running
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Passengers</CardTitle>
-              <Users className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.totalPassengers}</div>
-              <p className="text-xs text-muted-foreground">
-                +180 from last week
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Flights</CardTitle>
-              <Plane className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.totalFlights}</div>
-              <p className="text-xs text-muted-foreground">
-                +12 from last week
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Events List */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Your Events</CardTitle>
-            <CardDescription>
-              Select an event to manage its details and reports.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {events.map((event) => (
-                <div 
-                  key={event.event_id} 
-                  className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 cursor-pointer transition-colors"
-                  onClick={() => handleEventClick(event.event_id)}
-                >
-                  <div className="flex items-center space-x-4">
-                    <div className="p-2 bg-primary/10 rounded-lg">
-                      <Calendar className="h-4 w-4 text-primary" />
-                    </div>
-                    <div>
-                      <h3 className="font-medium">{event.name}</h3>
-                      <p className="text-sm text-muted-foreground">
-                        {event.start_date} - {event.end_date}
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        {event.description}
-                      </p>
-                    </div>
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <User className="h-5 w-5 mr-2" />
+                  User Profile
+                </CardTitle>
+                <CardDescription>Your account information</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  <div>
+                    <span className="font-medium">Email:</span>
+                    <p className="text-sm text-muted-foreground">{user?.email}</p>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <Badge className={getStatusColor(event.status)}>
-                      {event.status}
-                    </Badge>
-                    <Button variant="ghost" size="sm">
-                      View Details
-                    </Button>
+                  {user?.username && (
+                    <div>
+                      <span className="font-medium">Username:</span>
+                      <p className="text-sm text-muted-foreground">{user.username}</p>
+                    </div>
+                  )}
+                  <div>
+                    <span className="font-medium">Role:</span>
+                    <p className="text-sm text-muted-foreground">
+                      {user?.isAdmin ? 'Administrator' : 'User'}
+                    </p>
                   </div>
                 </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+              </CardContent>
+            </Card>
+
+            {/* <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Activity className="h-5 w-5 mr-2" />
+                  Session Analytics
+                </CardTitle>
+                <CardDescription>System session information</CardDescription>
+              </CardHeader>
+              <CardContent>
+                {isLoadingAnalytics ? (
+                  <div className="animate-pulse space-y-2">
+                    <div className="h-4 bg-gray-200 rounded"></div>
+                    <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                    <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+                  </div>
+                ) : analytics ? (
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <span>Active Sessions:</span>
+                      <span className="font-medium">{analytics.totalActive}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Redis Sessions:</span>
+                      <span className="text-sm text-muted-foreground">{analytics.redisSessions}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Memory Sessions:</span>
+                      <span className="text-sm text-muted-foreground">{analytics.memorySessions}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Server Uptime:</span>
+                      <span className="text-sm text-muted-foreground">{formatUptime(analytics.uptime)}</span>
+                    </div>
+                  </div>
+                ) : (
+                  <p className="text-sm text-muted-foreground">Failed to load analytics</p>
+                )}
+              </CardContent>
+            </Card> */}
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Quick Actions</CardTitle>
+                <CardDescription>Common tasks and shortcuts</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  <Button className="w-full" variant="outline">
+                    View Events
+                  </Button>
+                  <Button className="w-full" variant="outline">
+                    Create Report
+                  </Button>
+                  <Button className="w-full" variant="outline">
+                    Manage Passengers
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Clock className="h-5 w-5 mr-2" />
+                  System Status
+                </CardTitle>
+                <CardDescription>Current system information</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span>Status:</span>
+                    <span className="text-green-600">Online</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Last Login:</span>
+                    <span className="text-sm text-muted-foreground">Just now</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Session ID:</span>
+                    <span className="text-xs text-muted-foreground font-mono">
+                      {user?.sessionId || 'N/A'}
+                    </span>
+                  </div>
+                  {/* {analytics && (
+                    <div className="flex justify-between">
+                      <span>Last Updated:</span>
+                      <span className="text-xs text-muted-foreground">
+                        {new Date(analytics.lastUpdated).toLocaleTimeString()}
+                      </span>
+                    </div>
+                  )} */}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </Container>
       </div>
-    </SimpleLayout>
+    </ProtectedRoute>
   )
 } 

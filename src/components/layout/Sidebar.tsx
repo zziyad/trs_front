@@ -99,32 +99,27 @@ export function Sidebar({ eventId, items, isOpen, onToggle }: SidebarProps) {
     <>
       {/* Header */}
       <div className="flex h-14 items-center border-b px-4">
+        {/* Collapse Button - Left Side */}
+        <Button
+          variant="ghost"
+          size="sm"
+          className="h-8 w-8 p-0 mr-2"
+          onClick={toggleCollapse}
+        >
+          {isCollapsed ? (
+            <ChevronRight className="h-4 w-4" />
+          ) : (
+            <ChevronLeft className="h-4 w-4" />
+          )}
+        </Button>
+        
+        {/* Event Title and Icon */}
         <div className="flex items-center space-x-2">
-          <Plane className="h-5 w-5 text-primary" />
+          {/* <Plane className="h-5 w-5 text-primary" /> */}
           {!isCollapsed && (
             <span className="font-semibold">Event {eventId}</span>
           )}
         </div>
-        {!isCollapsed && (
-          <Button
-            variant="ghost"
-            size="sm"
-            className="ml-auto h-8 w-8 p-0"
-            onClick={toggleCollapse}
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-        )}
-        {isCollapsed && (
-          <Button
-            variant="ghost"
-            size="sm"
-            className="ml-auto h-8 w-8 p-0"
-            onClick={toggleCollapse}
-          >
-            <ChevronRight className="h-4 w-4" />
-          </Button>
-        )}
       </div>
 
       {/* Navigation Items */}
