@@ -92,6 +92,7 @@ export function Sidebar({ eventId, items, isOpen, onToggle }: SidebarProps) {
       if (pathname.includes('/hotel-transportation')) {
         newExpanded.add('Hotel Transportation')
       }
+      // Note: VAPP is now a main navigation item, not a sublink
       
       return newExpanded
     })
@@ -116,11 +117,17 @@ export function Sidebar({ eventId, items, isOpen, onToggle }: SidebarProps) {
       href: `/events/${eventId}/transport-reports`, 
       active: pathname === `/events/${eventId}/transport-reports` 
     },
-    { 
-      icon: Clock, 
-      label: 'Real-Time Status', 
-      href: `/events/${eventId}/status`, 
-      active: pathname === `/events/${eventId}/status` 
+        {
+      icon: Clock,
+      label: 'Real-Time Status',
+      href: `/events/${eventId}/status`,
+      active: pathname === `/events/${eventId}/status`
+    },
+    {
+      icon: ClipboardList,
+      label: 'VAPP',
+      href: `/events/${eventId}/vapp`,
+      active: pathname === `/events/${eventId}/vapp`
     },
     { 
       icon: Building, 
@@ -172,12 +179,7 @@ export function Sidebar({ eventId, items, isOpen, onToggle }: SidebarProps) {
           href: `/events/${eventId}/fleet-management/commissioning`, 
           active: pathname === `/events/${eventId}/fleet-management/commissioning` 
         },
-        { 
-          icon: FileText, 
-          label: 'VAPP', 
-          href: `/events/${eventId}/fleet-management/vapp`, 
-          active: pathname === `/events/${eventId}/fleet-management/vapp` 
-        }
+        
       ]
     },
     { 
