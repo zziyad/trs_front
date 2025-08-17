@@ -94,10 +94,15 @@ export default function AirTransferPage() {
       createdAt: new Date().toISOString()
     }
 
-    setTickets(prev => [...prev, newTicket])
-    
+    // Log the new ticket before state update
     console.log('New ticket added:', newTicket)
-    console.log('Updated tickets list:', [...tickets, newTicket])
+    
+    // Update state and log the updated list
+    setTickets(prev => {
+      const updatedTickets = [...prev, newTicket]
+      console.log('Updated tickets list:', updatedTickets)
+      return updatedTickets
+    })
     
     setFormData({
       name: '', surname: '', passportNumber: '', passportExpiryDate: '', dateOfBirth: '',
@@ -131,10 +136,21 @@ export default function AirTransferPage() {
       ...data, id: `excel-${Date.now()}-${index}`, createdAt: new Date().toISOString()
     }))
 
-    setTickets(prev => [...prev, ...newTickets])
+    // Log the mock data and new tickets before state update
     console.log('Excel data uploaded:', mockExcelData)
-    console.log('Updated tickets list after Excel upload:', [...tickets, ...newTickets])
+    console.log('New tickets to be added:', newTickets)
+    
+    // Update state and log the updated list
+    setTickets(prev => {
+      const updatedTickets = [...prev, ...newTickets]
+      console.log('Updated tickets list after Excel upload:', updatedTickets)
+      return updatedTickets
+    })
+    
     toast.success(`${newTickets.length} tickets imported from Excel!`)
+    
+    // Reset file input
+    e.target.value = ''
   }
 
   const getStatusColor = (status: string) => {
