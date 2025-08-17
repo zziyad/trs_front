@@ -37,7 +37,73 @@ export default function AirTransferPage() {
   const params = useParams()
   const eventId = params.eventId as string
 
-  const [tickets, setTickets] = useState<Ticket[]>([])
+  // Initialize with mock data for demonstration
+  const [tickets, setTickets] = useState<Ticket[]>([
+    {
+      id: '1',
+      name: 'John',
+      surname: 'Doe',
+      passportNumber: 'A12345678',
+      passportExpiryDate: '2025-12-31',
+      dateOfBirth: '1985-06-15',
+      nationality: 'United States',
+      flightNumber: 'AA123',
+      departureDate: '2024-03-20',
+      arrivalDate: '2024-03-20',
+      seatNumber: '12A',
+      ticketClass: 'Economy',
+      status: 'confirmed',
+      createdAt: '2024-03-15T10:00:00.000Z'
+    },
+    {
+      id: '2',
+      name: 'Jane',
+      surname: 'Smith',
+      passportNumber: 'B87654321',
+      passportExpiryDate: '2026-08-15',
+      dateOfBirth: '1990-03-22',
+      nationality: 'Canada',
+      flightNumber: 'AA123',
+      departureDate: '2024-03-20',
+      arrivalDate: '2024-03-20',
+      seatNumber: '12B',
+      ticketClass: 'Economy',
+      status: 'confirmed',
+      createdAt: '2024-03-15T10:30:00.000Z'
+    },
+    {
+      id: '3',
+      name: 'Michael',
+      surname: 'Johnson',
+      passportNumber: 'C11223344',
+      passportExpiryDate: '2027-01-10',
+      dateOfBirth: '1988-11-05',
+      nationality: 'United Kingdom',
+      flightNumber: 'BA456',
+      departureDate: '2024-03-21',
+      arrivalDate: '2024-03-21',
+      seatNumber: '15C',
+      ticketClass: 'Business',
+      status: 'pending',
+      createdAt: '2024-03-15T11:00:00.000Z'
+    },
+    {
+      id: '4',
+      name: 'Sarah',
+      surname: 'Williams',
+      passportNumber: 'D55667788',
+      passportExpiryDate: '2025-09-20',
+      dateOfBirth: '1992-07-12',
+      nationality: 'Australia',
+      flightNumber: 'QF789',
+      departureDate: '2024-03-22',
+      arrivalDate: '2024-03-22',
+      seatNumber: '8A',
+      ticketClass: 'First Class',
+      status: 'confirmed',
+      createdAt: '2024-03-15T11:30:00.000Z'
+    }
+  ])
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [formData, setFormData] = useState({
     name: '',
