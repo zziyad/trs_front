@@ -62,25 +62,29 @@ export function Sidebar({ eventId, items, isOpen, onToggle }: SidebarProps) {
   const pathname = usePathname()
   const [isCollapsed, setIsCollapsed] = useState(false)
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set())
+  const [isHydrated, setIsHydrated] = useState(false)
 
-  // Persist collapsed state in localStorage
+  // Hydration-safe localStorage handling
   useEffect(() => {
-    const stored = typeof window !== 'undefined' ? localStorage.getItem('sidebarCollapsed') : null
+    setIsHydrated(true)
+    const stored = localStorage.getItem('sidebarCollapsed')
     if (stored !== null) {
       setIsCollapsed(stored === 'true')
     }
   }, [])
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (isHydrated) {
       localStorage.setItem('sidebarCollapsed', isCollapsed ? 'true' : 'false')
     }
-  }, [isCollapsed])
+  }, [isCollapsed, isHydrated])
 
   // Auto-expand sections based on current path
   useEffect(() => {
+    if (!isHydrated) return // Don't run until hydrated
+    
     setExpandedSections(prev => {
-      const newExpanded = new Set(prev) // Start with current state
+      const newExpanded = new Set(prev)
       
       // Check which sections should be expanded based on current path
       if (pathname.includes('/fleet-management')) {
@@ -96,7 +100,7 @@ export function Sidebar({ eventId, items, isOpen, onToggle }: SidebarProps) {
       
       return newExpanded
     })
-  }, [pathname]) // Only depend on pathname changes
+  }, [pathname, isHydrated])
 
   const defaultItems: SidebarItem[] = [
     { 
@@ -439,6 +443,24 @@ export function Sidebar({ eventId, items, isOpen, onToggle }: SidebarProps) {
       </nav>
     </>
   )
+
+  // Don't render until hydrated to prevent hydration mismatch
+  if (!isHydrated) {
+    return (
+      <div className="hidden lg:block">
+        <div className="w-64 h-screen bg-background border-r animate-pulse">
+          <div className="p-4">
+            <div className="h-8 bg-muted rounded mb-4"></div>
+            <div className="space-y-2">
+              {[...Array(8)].map((_, i) => (
+                <div key={i} className="h-10 bg-muted rounded"></div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <>
