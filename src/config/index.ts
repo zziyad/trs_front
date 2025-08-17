@@ -48,7 +48,7 @@ export const ROUTE_PATTERNS = {
   FLEET_ID: '/events/[eventId]/fleet-management/fleet-id',
   FLEET_ASSIGNMENT: '/events/[eventId]/fleet-management/assignment',
   COMMISSIONING: '/events/[eventId]/fleet-management/commissioning',
-  VAPP: '/events/[eventId]/fleet-management/vapp',
+      VAPP: '/events/[eventId]/vapp',
   
   // Travel
   VISA: '/events/[eventId]/visa',

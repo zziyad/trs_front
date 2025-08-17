@@ -153,13 +153,13 @@ export const sitemapConfig: SitemapSection[] = [
         icon: 'Settings'
       },
       {
-        url: '/events/[eventId]/fleet-management/vapp',
+        url: '/events/[eventId]/vapp',
         lastModified: new Date(),
         changeFrequency: 'weekly',
         priority: 0.7,
         title: 'VAPP',
         description: 'Vehicle Assignment and Planning Protocol',
-        section: 'Fleet Management',
+        section: 'Main Navigation',
         subsection: 'VAPP',
         icon: 'ClipboardList'
       }

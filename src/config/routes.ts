@@ -113,13 +113,13 @@ export const routesConfig: Record<string, RouteConfig> = {
     breadcrumbs: ['Fleet Management', 'Commissioning & De-commissioning']
   },
   'vapp': {
-    path: '/events/[eventId]/fleet-management/vapp',
+    path: '/events/[eventId]/vapp',
     component: 'VAPPage',
     title: 'VAPP',
     description: 'Vehicle Assignment and Planning Protocol',
     icon: 'ClipboardList',
     layout: 'default',
-    breadcrumbs: ['Fleet Management', 'VAPP']
+    breadcrumbs: ['VAPP']
   },
 
   // Travel Routes

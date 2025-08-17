@@ -77,6 +77,13 @@ export const navigationConfig: NavigationSection[] = [
         href: '/events/[eventId]/real-time-status',
         icon: Activity,
         description: 'Live tracking and status updates'
+      },
+      {
+        id: 'vapp',
+        title: 'VAPP',
+        href: '/events/[eventId]/vapp',
+        icon: ClipboardList,
+        description: 'Vehicle Assignment and Planning Protocol'
       }
     ]
   },
@@ -132,13 +139,7 @@ export const navigationConfig: NavigationSection[] = [
         icon: Settings,
         description: 'Vehicle commissioning and decommissioning'
       },
-      {
-        id: 'vapp',
-        title: 'VAPP',
-        href: '/events/[eventId]/fleet-management/vapp',
-        icon: ClipboardList,
-        description: 'Vehicle Assignment and Planning Protocol'
-      }
+
     ]
   },
   {
