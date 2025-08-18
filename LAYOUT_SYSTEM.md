@@ -146,6 +146,7 @@ import { PageTemplate } from '@/components/layout'
 - Use `DefaultLayout` with sidebar navigation
 - Content wrapped in standardized components
 - Consistent header and stats patterns
+- Sidebar navigation is hardcoded in `Sidebar.tsx` component
 
 ```tsx
 <div className="space-y-6">
@@ -291,6 +292,86 @@ export default function EventVisaPage() {
 - **Stats**: Responsive grid with 2-5 columns
 - **Content**: Flexible grid layouts using Tailwind's grid system
 - **Cards**: Consistent card layouts with hover effects
+
+## Sidebar Navigation System
+
+### How It Works
+The sidebar navigation is **hardcoded** directly in the `Sidebar.tsx` component, not in external configuration files. This makes it simple and reliable.
+
+### Navigation Structure
+```typescript
+// Located in: src/components/layout/Sidebar.tsx
+const defaultItems: SidebarItem[] = [
+  { 
+    icon: BarChart3, 
+    label: 'Dashboard', 
+    href: `/events/${eventId}`, 
+    active: pathname === `/events/${eventId}` 
+  },
+  // ... more items
+]
+```
+
+### Adding New Navigation Items
+To add a new navigation link:
+
+1. **Add to `defaultItems` array** in `Sidebar.tsx`
+2. **Use proper icon** from `lucide-react`
+3. **Set correct `href`** with `eventId` parameter
+4. **Define `active` state** based on current pathname
+
+### Example: Adding a New Page
+```typescript
+{
+  icon: Settings,
+  label: 'Settings',
+  href: `/events/${eventId}/settings`,
+  active: pathname === `/events/${eventId}/settings`
+}
+```
+
+### Moving Navigation Items
+To move a navigation item:
+
+1. **Cut the item** from its current position in `defaultItems`
+2. **Paste it** to the new desired position
+3. **Update the `href`** if the path changes
+4. **Test navigation** to ensure it works
+
+### Important Notes
+- **No external config files** needed
+- **All navigation is self-contained** in the sidebar component
+- **Changes require code updates** and page refresh
+- **Simple and reliable** - no complex configuration system
+
+### Current Navigation Structure
+```
+Main Navigation:
+├── Dashboard
+├── AAD
+├── Flight Schedule
+├── Transport Reports
+├── Real-Time Status
+├── VAPP
+├── Hotel Transportation
+│   ├── Hotel Transport Operation
+│   └── Passengers
+├── Fleet Management
+│   ├── Driver Management
+│   ├── Fleet ID
+│   ├── Fleet Assignment
+│   └── Commissioning & De-commissioning
+└── Travel
+    ├── Visa
+    ├── Accommodation
+    ├── Air Transfer
+    └── Tickets
+```
+
+### Navigation Types
+- **Main Items**: Direct navigation links (Dashboard, AAD, VAPP, etc.)
+- **Collapsible Sections**: Items with sub-navigation (Hotel Transportation, Fleet Management, Travel)
+- **Sub Items**: Links within collapsible sections
 
 ## Creating New Pages
 
@@ -488,6 +569,20 @@ export default function TaskManagementPage() {
 2. **Missing props**: Check component interfaces for required props
 3. **Styling conflicts**: Use consistent CSS classes and avoid custom styles
 4. **Responsive issues**: Test on various screen sizes and use responsive classes
+
+### Sidebar Navigation Issues
+1. **Navigation not updating**: Check `Sidebar.tsx` `defaultItems` array
+2. **Wrong active state**: Verify `pathname` comparison in `active` property
+3. **Missing icons**: Import icons from `lucide-react`
+4. **Broken links**: Ensure `href` paths are correct and pages exist
+
+### Configuration vs. Sidebar
+**Important**: The sidebar navigation is **NOT** connected to the `src/config/` files. These are two separate systems:
+
+- **Sidebar**: Hardcoded in `Sidebar.tsx` - **This is what actually works**
+- **Config Files**: External configuration system - **Currently unused**
+
+To change navigation, update the sidebar component directly, not the config files.
 
 ### Getting Help
 - Check component interfaces for available props
