@@ -130,7 +130,7 @@ export function Navbar({
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="sm" className="relative">
-                  <UserCircle className="h-5 w-5 mr-2" />
+                  <UserCircle className="h-6 w-6 mr-2" />
                   <span className="hidden sm:inline-block">{user.username}</span>
                 </Button>
               </DropdownMenuTrigger>
@@ -145,18 +145,18 @@ export function Navbar({
                 </div>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleProfile}>
-                  <User className="mr-2 h-4 w-4" />
+                  <User className="mr-2 h-5 w-5" />
                   <span>Profile</span>
                 </DropdownMenuItem>
                 {user.isAdmin && (
                   <DropdownMenuItem onClick={handleAdminPanel}>
-                    <Shield className="mr-2 h-4 w-4" />
+                    <Shield className="mr-2 h-5 w-5" />
                     <span>Admin Panel</span>
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleLogout}>
-                  <LogOut className="mr-2 h-4 w-4" />
+                  <LogOut className="mr-2 h-5 w-5" />
                   <span>Log out</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -168,7 +168,7 @@ export function Navbar({
               size="sm" 
               onClick={() => router.push('/login')}
             >
-              <UserCircle className="h-5 w-5 mr-2" />
+              <UserCircle className="h-6 w-6 mr-2" />
               <span className="hidden sm:inline-block">Sign In</span>
             </Button>
           )}
