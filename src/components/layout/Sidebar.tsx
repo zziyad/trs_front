@@ -109,6 +109,12 @@ export function Sidebar({ eventId, items, isOpen, onToggle }: SidebarProps) {
       href: `/events/${eventId}`, 
       active: pathname === `/events/${eventId}` 
     },
+    {
+      icon: ClipboardList,
+      label: 'AAD',
+      href: `/events/${eventId}/aad`,
+      active: pathname === `/events/${eventId}/aad`
+    },
     { 
       icon: Calendar, 
       label: 'Flight Schedule', 
@@ -126,12 +132,6 @@ export function Sidebar({ eventId, items, isOpen, onToggle }: SidebarProps) {
       label: 'Real-Time Status',
       href: `/events/${eventId}/status`,
       active: pathname === `/events/${eventId}/status`
-    },
-    {
-      icon: ClipboardList,
-      label: 'VAPP',
-      href: `/events/${eventId}/vapp`,
-      active: pathname === `/events/${eventId}/vapp`
     },
     { 
       icon: Building, 
@@ -182,10 +182,22 @@ export function Sidebar({ eventId, items, isOpen, onToggle }: SidebarProps) {
           label: 'Commissioning & De-commissioning', 
           href: `/events/${eventId}/fleet-management/commissioning`, 
           active: pathname === `/events/${eventId}/fleet-management/commissioning` 
-        },
-        
+        }
       ]
     },
+    {
+      icon: ClipboardList,
+      label: 'VAPP',
+      href: `/events/${eventId}/vapp`,
+      active: pathname === `/events/${eventId}/vapp`
+    },
+    {
+      icon: Users,
+      label: 'Staff Statistics',
+      href: `/events/${eventId}/staff-statistics`,
+      active: pathname === `/events/${eventId}/staff-statistics`
+    },
+
     { 
       icon: Plane, 
       label: 'Travel', 
