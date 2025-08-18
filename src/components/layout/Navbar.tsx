@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { 
@@ -19,14 +19,7 @@ import {
   Menu,
   Shield
 } from 'lucide-react'
-
-interface UserSession {
-  user_id: number
-  username: string
-  email: string
-  is_active: boolean
-  permissions: string[]
-}
+import { useAuth } from '@/contexts/AuthContext'
 
 interface NavbarProps {
   title?: string
@@ -48,17 +41,17 @@ export function Navbar({
   showMenuToggle = false
 }: NavbarProps) {
   const router = useRouter()
-  const [userSession] = useState<UserSession | null>({
-    user_id: 1,
-    username: "Demo User",
-    email: "demo@example.com",
-    is_active: true,
-    permissions: ["read", "write"]
-  })
+  const { user, logout, isLoading } = useAuth()
 
-  const handleLogout = () => {
-    // Mock logout - in real app would call API
-    router.push('/login')
+  const handleLogout = async () => {
+    try {
+      await logout()
+      // logout() already handles navigation to login page
+    } catch (error) {
+      console.error('Logout failed:', error)
+      // Fallback navigation if logout fails
+      router.push('/login')
+    }
   }
 
   const handleProfile = () => {
@@ -126,20 +119,27 @@ export function Navbar({
 
         {/* User Menu */}
         <div className="ml-auto flex items-center space-x-2">
-          {userSession && (
+          {isLoading ? (
+            // Loading state
+            <Button variant="ghost" size="sm" disabled>
+              <div className="h-5 w-5 mr-2 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+              <span className="hidden sm:inline-block">Loading...</span>
+            </Button>
+          ) : user ? (
+            // Authenticated user
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="sm" className="relative">
                   <UserCircle className="h-5 w-5 mr-2" />
-                  <span className="hidden sm:inline-block">{userSession.username}</span>
+                  <span className="hidden sm:inline-block">{user.username}</span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
                 <div className="flex items-center justify-start gap-2 p-2">
                   <div className="flex flex-col space-y-1 leading-none">
-                    <p className="font-medium">{userSession.username}</p>
+                    <p className="font-medium">{user.username}</p>
                     <p className="w-[200px] truncate text-sm text-muted-foreground">
-                      {userSession.email}
+                      {user.email}
                     </p>
                   </div>
                 </div>
@@ -148,7 +148,7 @@ export function Navbar({
                   <User className="mr-2 h-4 w-4" />
                   <span>Profile</span>
                 </DropdownMenuItem>
-                {userSession.permissions.includes('admin') && (
+                {user.isAdmin && (
                   <DropdownMenuItem onClick={handleAdminPanel}>
                     <Shield className="mr-2 h-4 w-4" />
                     <span>Admin Panel</span>
@@ -161,6 +161,16 @@ export function Navbar({
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+          ) : (
+            // Not authenticated
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={() => router.push('/login')}
+            >
+              <UserCircle className="h-5 w-5 mr-2" />
+              <span className="hidden sm:inline-block">Sign In</span>
+            </Button>
           )}
         </div>
       </div>
