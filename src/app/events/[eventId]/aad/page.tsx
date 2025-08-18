@@ -52,6 +52,8 @@ export default function AADPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [filterStatus, setFilterStatus] = useState<string>('all')
+  const [lastGenerated, setLastGenerated] = useState<string | null>(null)
+  const [lastStatusUpdate, setLastStatusUpdate] = useState<string | null>(null)
 
   // Mock data for demonstration
   const mockFleetData = [
@@ -95,11 +97,12 @@ export default function AADPage() {
       })
 
       setAssignments(newAssignments)
+      setLastGenerated(new Date().toLocaleTimeString())
       console.log('Fleet Assignment Data Generated:', newAssignments)
-      alert('Fleet assignments generated successfully! Check console for consolidated data.')
+      // Success feedback handled by loading state and console logging
     } catch (error) {
       console.error('Error generating assignments:', error)
-      alert('Error generating fleet assignments. Please try again.')
+      // Error feedback handled by console logging
     } finally {
       setIsLoading(false)
     }
@@ -110,6 +113,7 @@ export default function AADPage() {
       assignment.id === assignmentId ? { ...assignment, status: newStatus } : assignment
     )
     setAssignments(updatedAssignments)
+    setLastStatusUpdate(new Date().toLocaleTimeString())
     console.log('Assignment Status Updated:', assignmentId, 'New Status:', newStatus)
   }
 
@@ -152,6 +156,35 @@ export default function AADPage() {
           </Button>
         }
       />
+
+      {/* Success Indicators */}
+      <div className="space-y-2">
+        {lastGenerated && (
+          <Card className="bg-green-50 border-green-200">
+            <CardContent className="pt-4">
+              <div className="flex items-center gap-2 text-green-700">
+                <CheckCircle className="h-4 w-4" />
+                <span className="text-sm font-medium">
+                  Fleet assignments last generated at {lastGenerated}
+                </span>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+        
+        {lastStatusUpdate && (
+          <Card className="bg-blue-50 border-blue-200">
+            <CardContent className="pt-4">
+              <div className="flex items-center gap-2 text-blue-700">
+                <CheckCircle className="h-4 w-4" />
+                <span className="text-sm font-medium">
+                  Last status update at {lastStatusUpdate}
+                </span>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+      </div>
 
       {/* Data Sources Summary */}
       <Card>
