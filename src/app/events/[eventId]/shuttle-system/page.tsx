@@ -43,7 +43,62 @@ export default function ShuttleSystemPage() {
   const params = useParams()
   const eventId = params.eventId as string
 
-  const [shuttles, setShuttles] = useState<ShuttleData[]>([])
+  // Mock fleet data for demonstration
+  const mockFleetData = [
+    { id: 'F001', plateNumber: 'ABC-123', type: 'Sedan', capacity: 4 },
+    { id: 'F002', plateNumber: 'XYZ-789', type: 'SUV', capacity: 6 },
+    { id: 'F003', plateNumber: 'DEF-456', type: 'Van', capacity: 8 },
+    { id: 'F004', plateNumber: 'GHI-789', type: 'Bus', capacity: 20 },
+    { id: 'F005', plateNumber: 'JKL-012', type: 'Minibus', capacity: 12 },
+    { id: 'F006', plateNumber: 'MNO-345', type: 'Sedan', capacity: 4 },
+    { id: 'F007', plateNumber: 'PQR-678', type: 'SUV', capacity: 6 },
+    { id: 'F008', plateNumber: 'STU-901', type: 'Van', capacity: 8 }
+  ]
+
+  // Sample shuttle data for demonstration
+  const sampleShuttles: ShuttleData[] = [
+    {
+      id: '1',
+      shuttleID: 'S001',
+      fromLocation: 'Baku Airport',
+      toLocation: 'Ganja Hotel',
+      departureTime: '2025-01-20T09:00',
+      arrivalTime: '2025-01-20T12:00',
+      driverName: 'John Doe',
+      driverContact: '+994501234567',
+      vehicleFleet: 'ABC-123',
+      status: 'Scheduled',
+      createdAt: '2025-01-19 14:30'
+    },
+    {
+      id: '2',
+      shuttleID: 'S002',
+      fromLocation: 'Conference Center',
+      toLocation: 'Exhibition Hall',
+      departureTime: '2025-01-20T10:00',
+      arrivalTime: '2025-01-20T10:30',
+      driverName: 'Maria Garcia',
+      driverContact: '+994501234568',
+      vehicleFleet: 'XYZ-789',
+      status: 'In Transit',
+      createdAt: '2025-01-19 15:00'
+    },
+    {
+      id: '3',
+      shuttleID: 'S003',
+      fromLocation: 'Hotel A',
+      toLocation: 'Baku Airport',
+      departureTime: '2025-01-20T16:00',
+      arrivalTime: '2025-01-20T19:00',
+      driverName: 'Ahmed Hassan',
+      driverContact: '+994501234569',
+      vehicleFleet: 'DEF-456',
+      status: 'Completed',
+      createdAt: '2025-01-19 16:00'
+    }
+  ]
+
+  const [shuttles, setShuttles] = useState<ShuttleData[]>(sampleShuttles)
   const [formData, setFormData] = useState<Omit<ShuttleData, 'id' | 'createdAt'>>({
     shuttleID: '',
     fromLocation: '',
@@ -218,6 +273,31 @@ export default function ShuttleSystemPage() {
         }
       />
 
+      {/* Available Fleet Information */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Truck className="h-5 w-5" />
+            Available Fleet Vehicles
+          </CardTitle>
+          <CardDescription>
+            Select from available fleet vehicles for shuttle operations
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {mockFleetData.map((fleet) => (
+              <div key={fleet.id} className="text-center p-4 bg-muted rounded-lg">
+                <Truck className="h-8 w-8 mx-auto mb-2 text-blue-600" />
+                <p className="font-semibold text-blue-900">{fleet.plateNumber}</p>
+                <p className="text-sm text-blue-700">{fleet.type}</p>
+                <p className="text-xs text-blue-600">{fleet.capacity} seats</p>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Shuttle Creation Form */}
       <Card>
         <CardHeader>
@@ -249,13 +329,21 @@ export default function ShuttleSystemPage() {
               
               <div>
                 <Label htmlFor="vehicleFleet">Vehicle / Fleet Number *</Label>
-                <Input
-                  id="vehicleFleet"
-                  placeholder="e.g., NP-49-01, ABC-123"
+                <Select
                   value={formData.vehicleFleet}
-                  onChange={(e) => handleInputChange('vehicleFleet', e.target.value)}
-                  className={errors.vehicleFleet ? 'border-red-500' : ''}
-                />
+                  onValueChange={(value) => handleInputChange('vehicleFleet', value)}
+                >
+                  <SelectTrigger className={errors.vehicleFleet ? 'border-red-500' : ''}>
+                    <SelectValue placeholder="Select fleet vehicle" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {mockFleetData.map((fleet) => (
+                      <SelectItem key={fleet.id} value={fleet.plateNumber}>
+                        {fleet.plateNumber} - {fleet.type} ({fleet.capacity} seats)
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
                 {errors.vehicleFleet && (
                   <p className="text-sm text-red-500 mt-1">{errors.vehicleFleet}</p>
                 )}
@@ -532,12 +620,14 @@ export default function ShuttleSystemPage() {
           <CardTitle className="text-lg">How to Use Shuttle System</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2 text-sm text-muted-foreground">
-          <p>1. <strong>Create Shuttle:</strong> Fill in all required fields and click "Create Shuttle"</p>
-          <p>2. <strong>Required Fields:</strong> All fields marked with * are mandatory</p>
-          <p>3. <strong>Time Validation:</strong> Arrival time must be after departure time</p>
-          <p>4. <strong>Status Updates:</strong> Click on status dropdown in the list to update shuttle status</p>
-          <p>5. <strong>Console Logging:</strong> All shuttle data and status updates are logged to browser console</p>
-          <p>6. <strong>Data Persistence:</strong> Shuttle list is maintained during the session</p>
+          <p>1. <strong>Available Fleet:</strong> View available fleet vehicles above the form</p>
+          <p>2. <strong>Create Shuttle:</strong> Fill in all required fields and click "Create Shuttle"</p>
+          <p>3. <strong>Fleet Selection:</strong> Choose from available fleet vehicles in the dropdown</p>
+          <p>4. <strong>Required Fields:</strong> All fields marked with * are mandatory</p>
+          <p>5. <strong>Time Validation:</strong> Arrival time must be after departure time</p>
+          <p>6. <strong>Status Updates:</strong> Click on status dropdown in the list to update shuttle status</p>
+          <p>7. <strong>Console Logging:</strong> All shuttle data and status updates are logged to browser console</p>
+          <p>8. <strong>Sample Data:</strong> Page includes sample shuttles to demonstrate functionality</p>
         </CardContent>
       </Card>
     </div>
