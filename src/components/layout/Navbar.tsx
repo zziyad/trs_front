@@ -133,7 +133,7 @@ export function Navbar({
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="sm" className="relative">
-                  <UserCircle className="h-8 w-8 mr-2" />
+                  <UserCircle className="h-10 w-10 mr-2" style={{ width: '40px', height: '40px' }} />
                   {/* <span className="hidden sm:inline-block">{user.username}</span> */}
                 </Button>
               </DropdownMenuTrigger>
@@ -148,18 +148,18 @@ export function Navbar({
                 </div>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleProfile}>
-                  <User className="mr-2 h-6 w-6" />
+                  <User className="mr-2 h-7 w-7" style={{ width: '28px', height: '28px' }} />
                   <span>Profile</span>
                 </DropdownMenuItem>
                 {user.isAdmin && (
                   <DropdownMenuItem onClick={handleAdminPanel}>
-                    <Shield className="mr-2 h-6 w-6" />
+                    <Shield className="mr-2 h-7 w-7" style={{ width: '28px', height: '28px' }} />
                     <span>Admin Panel</span>
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleLogout}>
-                  <LogOut className="mr-2 h-6 w-6" />
+                  <LogOut className="mr-2 h-7 w-7" style={{ width: '28px', height: '28px' }} />
                   <span>Log out</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -171,7 +171,7 @@ export function Navbar({
               size="sm" 
               onClick={() => router.push('/login')}
             >
-              <UserCircle className="h-8 w-8 mr-2" />
+              <UserCircle className="h-10 w-10 mr-2" style={{ width: '40px', height: '40px' }} />
               <span className="hidden sm:inline-block">Sign In</span>
             </Button>
           )}
