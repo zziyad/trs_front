@@ -78,7 +78,7 @@ export function Navbar({
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-14 items-center">
+      <div className="container flex h-14 items-center px-6">
         <div className="flex items-center space-x-4">
           {/* Mobile Menu Button */}
           {showMenuToggle && (
@@ -107,7 +107,10 @@ export function Navbar({
 
           {/* Logo and Title */}
           <div className="flex items-center space-x-2" onClick={handleLogoClick}>
+            <div className="flex items-center space-x-2 px-4">
+
             <Plane className="h-6 w-6 text-primary" />
+            </div>
             <div className="hidden sm:block">
               <h1 className="text-lg font-semibold">{title}</h1>
               {subtitle && (
@@ -130,8 +133,8 @@ export function Navbar({
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="sm" className="relative">
-                  <UserCircle className="h-6 w-6 mr-2" />
-                  <span className="hidden sm:inline-block">{user.username}</span>
+                  <UserCircle className="h-8 w-8 mr-2" />
+                  {/* <span className="hidden sm:inline-block">{user.username}</span> */}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
@@ -145,18 +148,18 @@ export function Navbar({
                 </div>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleProfile}>
-                  <User className="mr-2 h-5 w-5" />
+                  <User className="mr-2 h-6 w-6" />
                   <span>Profile</span>
                 </DropdownMenuItem>
                 {user.isAdmin && (
                   <DropdownMenuItem onClick={handleAdminPanel}>
-                    <Shield className="mr-2 h-5 w-5" />
+                    <Shield className="mr-2 h-6 w-6" />
                     <span>Admin Panel</span>
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleLogout}>
-                  <LogOut className="mr-2 h-5 w-5" />
+                  <LogOut className="mr-2 h-6 w-6" />
                   <span>Log out</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -168,7 +171,7 @@ export function Navbar({
               size="sm" 
               onClick={() => router.push('/login')}
             >
-              <UserCircle className="h-6 w-6 mr-2" />
+              <UserCircle className="h-8 w-8 mr-2" />
               <span className="hidden sm:inline-block">Sign In</span>
             </Button>
           )}
