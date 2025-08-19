@@ -16,6 +16,7 @@ import {
   FileText, 
   RefreshCw, 
   CheckCircle, 
+  Plus,
   AlertTriangle,
   Users,
   MapPin,
@@ -147,12 +148,12 @@ export default function AADPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Fleet Assignment (AAD)"
+        title="AAD"
         description="Consolidated view of fleet assignments combining information from Fleet ID, Driver Management, Hotel Transportation, and VAPP"
         actions={
           <Button onClick={generateAssignments} disabled={isLoading}>
-            <RefreshCw className={`mr-2 h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
-            {isLoading ? 'Generating...' : 'Regenerate Assignments'}
+            <Plus className={`mr-2 h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
+            {isLoading ? 'Generating...' : 'Add Schedule'}
           </Button>
         }
       />
@@ -202,7 +203,7 @@ export default function AADPage() {
             <div className="text-center p-4 bg-blue-50 rounded-lg">
               <Truck className="h-8 w-8 mx-auto mb-2 text-blue-600" />
               <p className="font-semibold text-blue-900">{mockFleetData.length}</p>
-              <p className="text-sm text-blue-700">Fleet Vehicles</p>
+              <p className="text-sm text-blue-700">Fleet</p>
             </div>
             <div className="text-center p-4 bg-green-50 rounded-lg">
               <User className="h-8 w-8 mx-auto mb-2 text-green-600" />

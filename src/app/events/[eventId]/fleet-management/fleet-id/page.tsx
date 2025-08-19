@@ -290,7 +290,7 @@ export default function FleetIDPage() {
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <Label htmlFor="fleetId">Fleet ID *</Label>
+                      <Label htmlFor="fleetId">Fleet ID (name)*</Label>
                       <Input
                         id="fleetId"
                         value={formData.fleetId}
@@ -301,7 +301,7 @@ export default function FleetIDPage() {
                     </div>
                     
                     <div>
-                      <Label htmlFor="plateNumber">Plate Number *</Label>
+                      <Label htmlFor="plateNumber">Plate Number * Iformation for dropdow Will take from Commissining  </Label>
                       <Input
                         id="plateNumber"
                         value={formData.plateNumber}

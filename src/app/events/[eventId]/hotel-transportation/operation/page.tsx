@@ -259,7 +259,7 @@ export default function HotelTransportOperationPage() {
                 <div className="space-y-2">
                   <Label htmlFor="from" className="flex items-center gap-2">
                     <MapPin className="h-4 w-4" />
-                    From (Origin) *
+                    From Hotel or Venue (Origin) *
                   </Label>
                   <Input
                     id="from"

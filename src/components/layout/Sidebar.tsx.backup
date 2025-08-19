@@ -110,12 +110,6 @@ export function Sidebar({ eventId, items, isOpen, onToggle }: SidebarProps) {
       active: pathname === `/events/${eventId}` 
     },
     {
-      icon: Users,
-      label: 'Staff Statistics',
-      href: `/events/${eventId}/staff-statistics`,
-      active: pathname === `/events/${eventId}/staff-statistics`
-    },
-    {
       icon: ClipboardList,
       label: 'AAD',
       href: `/events/${eventId}/aad`,
@@ -197,6 +191,7 @@ export function Sidebar({ eventId, items, isOpen, onToggle }: SidebarProps) {
       href: `/events/${eventId}/vapp`,
       active: pathname === `/events/${eventId}/vapp`
     },
+
     { 
       icon: Plane, 
       label: 'Travel', 
@@ -216,10 +211,16 @@ export function Sidebar({ eventId, items, isOpen, onToggle }: SidebarProps) {
           active: pathname === `/events/${eventId}/accommodation` 
         },
         { 
+          icon: Plane, 
+          label: 'Air Transfer', 
+          href: `/events/${eventId}/air-transfer`, 
+          active: pathname === `/events/${eventId}/air-transfer` 
+        },
+        { 
           icon: Ticket, 
-          label: 'Air Ticket', 
-          href: `/events/${eventId}/air-ticket`, 
-          active: pathname === `/events/${eventId}/air-ticket` 
+          label: 'Tickets', 
+          href: `/events/${eventId}/tickets`, 
+          active: pathname === `/events/${eventId}/tickets` 
         }
       ]
     },

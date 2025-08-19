@@ -1,0 +1,1454 @@
+{
+  "schemas": {
+    "BaseParsedData": {
+      "description": "Base schema for all parsed data with common fields",
+      "fields": {
+        "id": {
+          "type": "string",
+          "required": false,
+          "description": "Optional unique identifier"
+        },
+        "source": {
+          "type": "string",
+          "required": true,
+          "description": "Source of the parsed data"
+        },
+        "timestamp": {
+          "type": "date",
+          "required": false,
+          "default": "current_date",
+          "description": "When the data was parsed"
+        },
+        "rawData": {
+          "type": "string",
+          "required": true,
+          "description": "Original raw data before parsing"
+        },
+        "parsedAt": {
+          "type": "date",
+          "required": false,
+          "default": "current_date",
+          "description": "When parsing completed"
+        },
+        "confidence": {
+          "type": "number",
+          "required": false,
+          "default": 0.8,
+          "min": 0,
+          "max": 1,
+          "description": "Confidence score of parsing accuracy"
+        },
+        "errors": {
+          "type": "array",
+          "required": false,
+          "default": [],
+          "items": "string",
+          "description": "Any parsing errors encountered"
+        },
+        "warnings": {
+          "type": "array",
+          "required": false,
+          "default": [],
+          "items": "string",
+          "description": "Any parsing warnings"
+        }
+      }
+    },
+    "Event": {
+      "description": "Event data parsing schema",
+      "extends": "BaseParsedData",
+      "fields": {
+        "eventId": {
+          "type": "string",
+          "required": true,
+          "description": "Unique event identifier"
+        },
+        "eventName": {
+          "type": "string",
+          "required": true,
+          "description": "Name of the event"
+        },
+        "eventType": {
+          "type": "enum",
+          "required": true,
+          "values": ["conference", "meeting", "travel", "training", "other"],
+          "description": "Type of event"
+        },
+        "startDate": {
+          "type": "date",
+          "required": true,
+          "description": "Event start date"
+        },
+        "endDate": {
+          "type": "date",
+          "required": true,
+          "description": "Event end date"
+        },
+        "location": {
+          "type": "string",
+          "required": false,
+          "description": "Event location"
+        },
+        "description": {
+          "type": "string",
+          "required": false,
+          "description": "Event description"
+        },
+        "status": {
+          "type": "enum",
+          "required": false,
+          "default": "planned",
+          "values": ["planned", "active", "completed", "cancelled"],
+          "description": "Event status"
+        },
+        "priority": {
+          "type": "enum",
+          "required": false,
+          "default": "medium",
+          "values": ["low", "medium", "high", "critical"],
+          "description": "Event priority"
+        },
+        "attendees": {
+          "type": "array",
+          "required": false,
+          "default": [],
+          "items": "string",
+          "description": "List of attendee IDs"
+        },
+        "budget": {
+          "type": "number",
+          "required": false,
+          "description": "Event budget"
+        },
+        "organizer": {
+          "type": "string",
+          "required": true,
+          "description": "Event organizer ID"
+        }
+      }
+    },
+    "EventAccommodation": {
+      "description": "Event accommodation parsing schema",
+      "extends": "BaseParsedData",
+      "fields": {
+        "eventId": {
+          "type": "string",
+          "required": true,
+          "description": "Associated event ID"
+        },
+        "accommodationId": {
+          "type": "string",
+          "required": true,
+          "description": "Unique accommodation identifier"
+        },
+        "hotelName": {
+          "type": "string",
+          "required": true,
+          "description": "Hotel name"
+        },
+        "address": {
+          "type": "string",
+          "required": true,
+          "description": "Hotel address"
+        },
+        "checkInDate": {
+          "type": "date",
+          "required": true,
+          "description": "Check-in date"
+        },
+        "checkOutDate": {
+          "type": "date",
+          "required": true,
+          "description": "Check-out date"
+        },
+        "roomType": {
+          "type": "string",
+          "required": true,
+          "description": "Type of room"
+        },
+        "roomNumber": {
+          "type": "string",
+          "required": false,
+          "description": "Room number"
+        },
+        "guestCount": {
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "description": "Number of guests"
+        },
+        "status": {
+          "type": "enum",
+          "required": true,
+          "values": ["reserved", "confirmed", "checked-in", "checked-out", "cancelled"],
+          "description": "Accommodation status"
+        },
+        "cost": {
+          "type": "number",
+          "required": false,
+          "description": "Accommodation cost"
+        },
+        "specialRequests": {
+          "type": "string",
+          "required": false,
+          "description": "Special accommodation requests"
+        }
+      }
+    },
+    "Passenger": {
+      "description": "Passenger data parsing schema",
+      "extends": "BaseParsedData",
+      "fields": {
+        "passengerId": {
+          "type": "string",
+          "required": true,
+          "description": "Unique passenger identifier"
+        },
+        "firstName": {
+          "type": "string",
+          "required": true,
+          "description": "Passenger first name"
+        },
+        "lastName": {
+          "type": "string",
+          "required": true,
+          "description": "Passenger last name"
+        },
+        "dateOfBirth": {
+          "type": "date",
+          "required": true,
+          "description": "Passenger date of birth"
+        },
+        "nationality": {
+          "type": "string",
+          "required": true,
+          "description": "Passenger nationality"
+        },
+        "passportNumber": {
+          "type": "string",
+          "required": false,
+          "description": "Passport number"
+        },
+        "passportExpiry": {
+          "type": "date",
+          "required": false,
+          "description": "Passport expiry date"
+        },
+        "visaNumber": {
+          "type": "string",
+          "required": false,
+          "description": "Visa number"
+        },
+        "visaExpiry": {
+          "type": "date",
+          "required": false,
+          "description": "Visa expiry date"
+        },
+        "contactPhone": {
+          "type": "string",
+          "required": false,
+          "description": "Contact phone number"
+        },
+        "contactEmail": {
+          "type": "email",
+          "required": false,
+          "description": "Contact email"
+        },
+        "emergencyContact": {
+          "type": "object",
+          "required": false,
+          "fields": {
+            "name": "string",
+            "relationship": "string",
+            "phone": "string",
+            "email": "email"
+          },
+          "description": "Emergency contact information"
+        },
+        "dietaryRestrictions": {
+          "type": "array",
+          "required": false,
+          "default": [],
+          "items": "string",
+          "description": "Dietary restrictions"
+        },
+        "medicalConditions": {
+          "type": "array",
+          "required": false,
+          "default": [],
+          "items": "string",
+          "description": "Medical conditions"
+        },
+        "specialAssistance": {
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "Requires special assistance"
+        },
+        "status": {
+          "type": "enum",
+          "required": false,
+          "default": "active",
+          "values": ["active", "inactive", "suspended"],
+          "description": "Passenger status"
+        }
+      }
+    },
+    "Vehicle": {
+      "description": "Vehicle data parsing schema",
+      "extends": "BaseParsedData",
+      "fields": {
+        "vehicleId": {
+          "type": "string",
+          "required": true,
+          "description": "Unique vehicle identifier"
+        },
+        "registrationNumber": {
+          "type": "string",
+          "required": true,
+          "description": "Vehicle registration number"
+        },
+        "make": {
+          "type": "string",
+          "required": true,
+          "description": "Vehicle make"
+        },
+        "model": {
+          "type": "string",
+          "required": true,
+          "description": "Vehicle model"
+        },
+        "year": {
+          "type": "number",
+          "required": true,
+          "min": 1900,
+          "max": "current_year + 1",
+          "description": "Vehicle year"
+        },
+        "color": {
+          "type": "string",
+          "required": true,
+          "description": "Vehicle color"
+        },
+        "capacity": {
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "description": "Passenger capacity"
+        },
+        "fuelType": {
+          "type": "enum",
+          "required": true,
+          "values": ["petrol", "diesel", "electric", "hybrid", "other"],
+          "description": "Fuel type"
+        },
+        "transmission": {
+          "type": "enum",
+          "required": true,
+          "values": ["manual", "automatic"],
+          "description": "Transmission type"
+        },
+        "status": {
+          "type": "enum",
+          "required": false,
+          "default": "available",
+          "values": ["available", "in-use", "maintenance", "out-of-service"],
+          "description": "Vehicle status"
+        },
+        "lastMaintenance": {
+          "type": "date",
+          "required": false,
+          "description": "Last maintenance date"
+        },
+        "nextMaintenance": {
+          "type": "date",
+          "required": false,
+          "description": "Next maintenance due date"
+        },
+        "mileage": {
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "description": "Current mileage"
+        },
+        "fuelLevel": {
+          "type": "number",
+          "required": false,
+          "min": 0,
+          "max": 100,
+          "description": "Current fuel level percentage"
+        },
+        "location": {
+          "type": "string",
+          "required": false,
+          "description": "Current vehicle location"
+        },
+        "assignedDriver": {
+          "type": "string",
+          "required": false,
+          "description": "Currently assigned driver ID"
+        }
+      }
+    },
+    "Driver": {
+      "description": "Driver data parsing schema",
+      "extends": "BaseParsedData",
+      "fields": {
+        "driverId": {
+          "type": "string",
+          "required": true,
+          "description": "Unique driver identifier"
+        },
+        "employeeId": {
+          "type": "string",
+          "required": true,
+          "description": "Employee ID"
+        },
+        "firstName": {
+          "type": "string",
+          "required": true,
+          "description": "Driver first name"
+        },
+        "lastName": {
+          "type": "string",
+          "required": true,
+          "description": "Driver last name"
+        },
+        "dateOfBirth": {
+          "type": "date",
+          "required": true,
+          "description": "Driver date of birth"
+        },
+        "licenseNumber": {
+          "type": "string",
+          "required": true,
+          "description": "Driver license number"
+        },
+        "licenseType": {
+          "type": "enum",
+          "required": true,
+          "values": ["A", "B", "C", "D", "E"],
+          "description": "License type"
+        },
+        "licenseExpiry": {
+          "type": "date",
+          "required": true,
+          "description": "License expiry date"
+        },
+        "experienceYears": {
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "description": "Years of driving experience"
+        },
+        "contactPhone": {
+          "type": "string",
+          "required": true,
+          "description": "Contact phone number"
+        },
+        "contactEmail": {
+          "type": "email",
+          "required": true,
+          "description": "Contact email"
+        },
+        "emergencyContact": {
+          "type": "object",
+          "required": true,
+          "fields": {
+            "name": "string",
+            "relationship": "string",
+            "phone": "string",
+            "email": "email"
+          },
+          "description": "Emergency contact information"
+        },
+        "medicalCertificate": {
+          "type": "object",
+          "required": false,
+          "fields": {
+            "number": "string",
+            "expiryDate": "date",
+            "issuingAuthority": "string"
+          },
+          "description": "Medical certificate details"
+        },
+        "status": {
+          "type": "enum",
+          "required": false,
+          "default": "active",
+          "values": ["active", "inactive", "suspended", "on-leave"],
+          "description": "Driver status"
+        },
+        "assignedVehicle": {
+          "type": "string",
+          "required": false,
+          "description": "Currently assigned vehicle ID"
+        },
+        "currentLocation": {
+          "type": "string",
+          "required": false,
+          "description": "Current driver location"
+        }
+      }
+    },
+    "TransportSchedule": {
+      "description": "Transport schedule parsing schema",
+      "extends": "BaseParsedData",
+      "fields": {
+        "scheduleId": {
+          "type": "string",
+          "required": true,
+          "description": "Unique schedule identifier"
+        },
+        "eventId": {
+          "type": "string",
+          "required": true,
+          "description": "Associated event ID"
+        },
+        "routeName": {
+          "type": "string",
+          "required": true,
+          "description": "Route name or description"
+        },
+        "departureLocation": {
+          "type": "string",
+          "required": true,
+          "description": "Departure location"
+        },
+        "arrivalLocation": {
+          "type": "string",
+          "required": true,
+          "description": "Arrival location"
+        },
+        "departureTime": {
+          "type": "date",
+          "required": true,
+          "description": "Scheduled departure time"
+        },
+        "arrivalTime": {
+          "type": "date",
+          "required": true,
+          "description": "Scheduled arrival time"
+        },
+        "vehicleId": {
+          "type": "string",
+          "required": false,
+          "description": "Assigned vehicle ID"
+        },
+        "driverId": {
+          "type": "string",
+          "required": false,
+          "description": "Assigned driver ID"
+        },
+        "passengerCount": {
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "description": "Number of passengers"
+        },
+        "maxCapacity": {
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "description": "Maximum passenger capacity"
+        },
+        "status": {
+          "type": "enum",
+          "required": false,
+          "default": "scheduled",
+          "values": ["scheduled", "in-progress", "completed", "cancelled", "delayed"],
+          "description": "Schedule status"
+        },
+        "delayMinutes": {
+          "type": "number",
+          "required": false,
+          "default": 0,
+          "min": 0,
+          "description": "Delay in minutes"
+        },
+        "notes": {
+          "type": "string",
+          "required": false,
+          "description": "Additional notes"
+        },
+        "specialInstructions": {
+          "type": "string",
+          "required": false,
+          "description": "Special instructions for driver"
+        }
+      }
+    },
+    "FlightSchedule": {
+      "description": "Flight schedule parsing schema",
+      "extends": "BaseParsedData",
+      "fields": {
+        "flightId": {
+          "type": "string",
+          "required": true,
+          "description": "Unique flight identifier"
+        },
+        "eventId": {
+          "type": "string",
+          "required": true,
+          "description": "Associated event ID"
+        },
+        "airline": {
+          "type": "string",
+          "required": true,
+          "description": "Airline name"
+        },
+        "flightNumber": {
+          "type": "string",
+          "required": true,
+          "description": "Flight number"
+        },
+        "departureAirport": {
+          "type": "string",
+          "required": true,
+          "description": "Departure airport code"
+        },
+        "arrivalAirport": {
+          "type": "string",
+          "required": true,
+          "description": "Arrival airport code"
+        },
+        "departureTime": {
+          "type": "date",
+          "required": true,
+          "description": "Scheduled departure time"
+        },
+        "arrivalTime": {
+          "type": "date",
+          "required": true,
+          "description": "Scheduled arrival time"
+        },
+        "aircraftType": {
+          "type": "string",
+          "required": false,
+          "description": "Aircraft type"
+        },
+        "seatClass": {
+          "type": "enum",
+          "required": false,
+          "default": "economy",
+          "values": ["economy", "business", "first"],
+          "description": "Seat class"
+        },
+        "passengerCount": {
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "description": "Number of passengers"
+        },
+        "status": {
+          "type": "enum",
+          "required": false,
+          "default": "scheduled",
+          "values": ["scheduled", "boarding", "departed", "arrived", "cancelled", "delayed"],
+          "description": "Flight status"
+        },
+        "gate": {
+          "type": "string",
+          "required": false,
+          "description": "Departure gate"
+        },
+        "terminal": {
+          "type": "string",
+          "required": false,
+          "description": "Terminal number"
+        },
+        "baggageClaim": {
+          "type": "string",
+          "required": false,
+          "description": "Baggage claim information"
+        },
+        "delayMinutes": {
+          "type": "number",
+          "required": false,
+          "default": 0,
+          "min": 0,
+          "description": "Delay in minutes"
+        },
+        "cancellationReason": {
+          "type": "string",
+          "required": false,
+          "description": "Reason for cancellation if applicable"
+        }
+      }
+    },
+    "HotelTransportation": {
+      "description": "Hotel transportation parsing schema",
+      "extends": "BaseParsedData",
+      "fields": {
+        "transportationId": {
+          "type": "string",
+          "required": true,
+          "description": "Unique transportation identifier"
+        },
+        "eventId": {
+          "type": "string",
+          "required": true,
+          "description": "Associated event ID"
+        },
+        "hotelName": {
+          "type": "string",
+          "required": true,
+          "description": "Hotel name"
+        },
+        "hotelAddress": {
+          "type": "string",
+          "required": true,
+          "description": "Hotel address"
+        },
+        "pickupTime": {
+          "type": "date",
+          "required": true,
+          "description": "Scheduled pickup time"
+        },
+        "dropoffTime": {
+          "type": "date",
+          "required": true,
+          "description": "Scheduled dropoff time"
+        },
+        "vehicleId": {
+          "type": "string",
+          "required": false,
+          "description": "Assigned vehicle ID"
+        },
+        "driverId": {
+          "type": "string",
+          "required": false,
+          "description": "Assigned driver ID"
+        },
+        "passengerCount": {
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "description": "Number of passengers"
+        },
+        "pickupLocation": {
+          "type": "string",
+          "required": true,
+          "description": "Pickup location"
+        },
+        "dropoffLocation": {
+          "type": "string",
+          "required": true,
+          "description": "Dropoff location"
+        },
+        "status": {
+          "type": "enum",
+          "required": false,
+          "default": "scheduled",
+          "values": ["scheduled", "in-progress", "completed", "cancelled"],
+          "description": "Transportation status"
+        },
+        "specialRequests": {
+          "type": "string",
+          "required": false,
+          "description": "Special transportation requests"
+        },
+        "notes": {
+          "type": "string",
+          "required": false,
+          "description": "Additional notes"
+        }
+      }
+    },
+    "Task": {
+      "description": "Task data parsing schema",
+      "extends": "BaseParsedData",
+      "fields": {
+        "taskId": {
+          "type": "string",
+          "required": true,
+          "description": "Unique task identifier"
+        },
+        "eventId": {
+          "type": "string",
+          "required": true,
+          "description": "Associated event ID"
+        },
+        "title": {
+          "type": "string",
+          "required": true,
+          "description": "Task title"
+        },
+        "description": {
+          "type": "string",
+          "required": true,
+          "description": "Task description"
+        },
+        "assignedTo": {
+          "type": "string",
+          "required": true,
+          "description": "Assigned user ID"
+        },
+        "assignedBy": {
+          "type": "string",
+          "required": true,
+          "description": "User who assigned the task"
+        },
+        "priority": {
+          "type": "enum",
+          "required": false,
+          "default": "medium",
+          "values": ["low", "medium", "high", "critical"],
+          "description": "Task priority"
+        },
+        "status": {
+          "type": "enum",
+          "required": false,
+          "default": "pending",
+          "values": ["pending", "in-progress", "completed", "cancelled", "on-hold"],
+          "description": "Task status"
+        },
+        "dueDate": {
+          "type": "date",
+          "required": true,
+          "description": "Task due date"
+        },
+        "startDate": {
+          "type": "date",
+          "required": false,
+          "description": "Task start date"
+        },
+        "completionDate": {
+          "type": "date",
+          "required": false,
+          "description": "Task completion date"
+        },
+        "estimatedHours": {
+          "type": "number",
+          "required": false,
+          "min": 0,
+          "description": "Estimated hours to complete"
+        },
+        "actualHours": {
+          "type": "number",
+          "required": false,
+          "min": 0,
+          "description": "Actual hours spent"
+        },
+        "dependencies": {
+          "type": "array",
+          "required": false,
+          "default": [],
+          "items": "string",
+          "description": "Dependent task IDs"
+        },
+        "tags": {
+          "type": "array",
+          "required": false,
+          "default": [],
+          "items": "string",
+          "description": "Task tags"
+        },
+        "attachments": {
+          "type": "array",
+          "required": false,
+          "default": [],
+          "items": "string",
+          "description": "Attachment file IDs"
+        },
+        "notes": {
+          "type": "string",
+          "required": false,
+          "description": "Additional notes"
+        }
+      }
+    },
+    "Document": {
+      "description": "Document parsing schema",
+      "extends": "BaseParsedData",
+      "fields": {
+        "documentId": {
+          "type": "string",
+          "required": true,
+          "description": "Unique document identifier"
+        },
+        "eventId": {
+          "type": "string",
+          "required": true,
+          "description": "Associated event ID"
+        },
+        "title": {
+          "type": "string",
+          "required": true,
+          "description": "Document title"
+        },
+        "description": {
+          "type": "string",
+          "required": false,
+          "description": "Document description"
+        },
+        "fileName": {
+          "type": "string",
+          "required": true,
+          "description": "Original file name"
+        },
+        "filePath": {
+          "type": "string",
+          "required": true,
+          "description": "File storage path"
+        },
+        "fileSize": {
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "description": "File size in bytes"
+        },
+        "mimeType": {
+          "type": "string",
+          "required": true,
+          "description": "File MIME type"
+        },
+        "category": {
+          "type": "enum",
+          "required": true,
+          "values": ["passport", "visa", "ticket", "invoice", "contract", "other"],
+          "description": "Document category"
+        },
+        "status": {
+          "type": "enum",
+          "required": false,
+          "default": "pending",
+          "values": ["draft", "pending", "approved", "rejected", "expired"],
+          "description": "Document status"
+        },
+        "uploadedBy": {
+          "type": "string",
+          "required": true,
+          "description": "User who uploaded the document"
+        },
+        "uploadedAt": {
+          "type": "date",
+          "required": true,
+          "description": "Upload timestamp"
+        },
+        "expiryDate": {
+          "type": "date",
+          "required": false,
+          "description": "Document expiry date"
+        },
+        "tags": {
+          "type": "array",
+          "required": false,
+          "default": [],
+          "items": "string",
+          "description": "Document tags"
+        },
+        "version": {
+          "type": "string",
+          "required": false,
+          "default": "1.0",
+          "description": "Document version"
+        },
+        "isPublic": {
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "Whether document is publicly accessible"
+        }
+      }
+    },
+    "Visa": {
+      "description": "Visa data parsing schema",
+      "extends": "BaseParsedData",
+      "fields": {
+        "visaId": {
+          "type": "string",
+          "required": true,
+          "description": "Unique visa identifier"
+        },
+        "eventId": {
+          "type": "string",
+          "required": true,
+          "description": "Associated event ID"
+        },
+        "passengerId": {
+          "type": "string",
+          "required": true,
+          "description": "Associated passenger ID"
+        },
+        "visaType": {
+          "type": "enum",
+          "required": true,
+          "values": ["tourist", "business", "work", "student", "transit", "other"],
+          "description": "Visa type"
+        },
+        "country": {
+          "type": "string",
+          "required": true,
+          "description": "Visa issuing country"
+        },
+        "visaNumber": {
+          "type": "string",
+          "required": true,
+          "description": "Visa number"
+        },
+        "issueDate": {
+          "type": "date",
+          "required": true,
+          "description": "Visa issue date"
+        },
+        "expiryDate": {
+          "type": "date",
+          "required": true,
+          "description": "Visa expiry date"
+        },
+        "entryType": {
+          "type": "enum",
+          "required": true,
+          "values": ["single", "double", "multiple"],
+          "description": "Entry type"
+        },
+        "status": {
+          "type": "enum",
+          "required": false,
+          "default": "pending",
+          "values": ["pending", "approved", "rejected", "expired", "cancelled"],
+          "description": "Visa status"
+        },
+        "processingTime": {
+          "type": "number",
+          "required": false,
+          "min": 0,
+          "description": "Processing time in days"
+        },
+        "cost": {
+          "type": "number",
+          "required": false,
+          "min": 0,
+          "description": "Visa cost"
+        },
+        "requirements": {
+          "type": "array",
+          "required": false,
+          "default": [],
+          "items": "string",
+          "description": "Visa requirements"
+        },
+        "notes": {
+          "type": "string",
+          "required": false,
+          "description": "Additional notes"
+        },
+        "applicationDate": {
+          "type": "date",
+          "required": false,
+          "description": "Application submission date"
+        },
+        "approvalDate": {
+          "type": "date",
+          "required": false,
+          "description": "Approval date"
+        }
+      }
+    },
+    "AAD": {
+      "description": "AAD (Arrival and Departure) data parsing schema",
+      "extends": "BaseParsedData",
+      "fields": {
+        "aadId": {
+          "type": "string",
+          "required": true,
+          "description": "Unique AAD identifier"
+        },
+        "eventId": {
+          "type": "string",
+          "required": true,
+          "description": "Associated event ID"
+        },
+        "passengerId": {
+          "type": "string",
+          "required": true,
+          "description": "Associated passenger ID"
+        },
+        "arrivalDate": {
+          "type": "date",
+          "required": true,
+          "description": "Arrival date"
+        },
+        "departureDate": {
+          "type": "date",
+          "required": true,
+          "description": "Departure date"
+        },
+        "arrivalTime": {
+          "type": "string",
+          "required": true,
+          "description": "Arrival time"
+        },
+        "departureTime": {
+          "type": "string",
+          "required": true,
+          "description": "Departure time"
+        },
+        "arrivalLocation": {
+          "type": "string",
+          "required": true,
+          "description": "Arrival location"
+        },
+        "departureLocation": {
+          "type": "string",
+          "required": true,
+          "description": "Departure location"
+        },
+        "transportMode": {
+          "type": "enum",
+          "required": true,
+          "values": ["air", "land", "sea"],
+          "description": "Transport mode"
+        },
+        "status": {
+          "type": "enum",
+          "required": false,
+          "default": "scheduled",
+          "values": ["scheduled", "in-progress", "completed", "cancelled", "delayed"],
+          "description": "AAD status"
+        },
+        "delayMinutes": {
+          "type": "number",
+          "required": false,
+          "default": 0,
+          "min": 0,
+          "description": "Delay in minutes"
+        },
+        "notes": {
+          "type": "string",
+          "required": false,
+          "description": "Additional notes"
+        },
+        "specialAssistance": {
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "Requires special assistance"
+        }
+      }
+    },
+    "StaffStatistics": {
+      "description": "Staff statistics parsing schema",
+      "extends": "BaseParsedData",
+      "fields": {
+        "statisticsId": {
+          "type": "string",
+          "required": true,
+          "description": "Unique statistics identifier"
+        },
+        "eventId": {
+          "type": "string",
+          "required": true,
+          "description": "Associated event ID"
+        },
+        "date": {
+          "type": "date",
+          "required": true,
+          "description": "Statistics date"
+        },
+        "totalStaff": {
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "description": "Total staff count"
+        },
+        "presentStaff": {
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "description": "Present staff count"
+        },
+        "absentStaff": {
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "description": "Absent staff count"
+        },
+        "onLeaveStaff": {
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "description": "Staff on leave count"
+        },
+        "sickStaff": {
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "description": "Sick staff count"
+        },
+        "overtimeHours": {
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "description": "Total overtime hours"
+        },
+        "departmentBreakdown": {
+          "type": "object",
+          "required": false,
+          "default": {},
+          "description": "Staff count by department"
+        },
+        "notes": {
+          "type": "string",
+          "required": false,
+          "description": "Additional notes"
+        }
+      }
+    },
+    "TransportReport": {
+      "description": "Transport report parsing schema",
+      "extends": "BaseParsedData",
+      "fields": {
+        "reportId": {
+          "type": "string",
+          "required": true,
+          "description": "Unique report identifier"
+        },
+        "eventId": {
+          "type": "string",
+          "required": true,
+          "description": "Associated event ID"
+        },
+        "reportDate": {
+          "type": "date",
+          "required": true,
+          "description": "Report date"
+        },
+        "reportType": {
+          "type": "enum",
+          "required": true,
+          "values": ["daily", "weekly", "monthly", "incident", "summary"],
+          "description": "Report type"
+        },
+        "totalTrips": {
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "description": "Total trips completed"
+        },
+        "totalPassengers": {
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "description": "Total passengers transported"
+        },
+        "totalDistance": {
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "description": "Total distance covered in km"
+        },
+        "totalFuelUsed": {
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "description": "Total fuel used in liters"
+        },
+        "totalCost": {
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "description": "Total transport cost"
+        },
+        "incidents": {
+          "type": "array",
+          "required": false,
+          "default": [],
+          "items": {
+            "description": "string",
+            "severity": "enum:low,medium,high,critical",
+            "resolution": "string"
+          },
+          "description": "Transport incidents"
+        },
+        "vehicleUtilization": {
+          "type": "object",
+          "required": false,
+          "default": {},
+          "description": "Vehicle utilization by vehicle ID"
+        },
+        "driverPerformance": {
+          "type": "object",
+          "required": false,
+          "default": {},
+          "description": "Driver performance metrics"
+        },
+        "notes": {
+          "type": "string",
+          "required": false,
+          "description": "Additional notes"
+        }
+      }
+    },
+    "VAPP": {
+      "description": "VAPP (Vehicle Assignment and Passenger Planning) data parsing schema",
+      "extends": "BaseParsedData",
+      "fields": {
+        "vappId": {
+          "type": "string",
+          "required": true,
+          "description": "Unique VAPP identifier"
+        },
+        "eventId": {
+          "type": "string",
+          "required": true,
+          "description": "Associated event ID"
+        },
+        "vehicleId": {
+          "type": "string",
+          "required": true,
+          "description": "Assigned vehicle ID"
+        },
+        "driverId": {
+          "type": "string",
+          "required": true,
+          "description": "Assigned driver ID"
+        },
+        "route": {
+          "type": "object",
+          "required": true,
+          "fields": {
+            "startLocation": "string",
+            "endLocation": "string",
+            "waypoints": "array:string",
+            "estimatedDistance": "number:min0",
+            "estimatedDuration": "number:min0"
+          },
+          "description": "Route information"
+        },
+        "schedule": {
+          "type": "object",
+          "required": true,
+          "fields": {
+            "departureTime": "date",
+            "arrivalTime": "date",
+            "pickupStops": "array:object",
+            "dropoffStops": "array:object"
+          },
+          "description": "Schedule information"
+        },
+        "passengers": {
+          "type": "array",
+          "required": false,
+          "default": [],
+          "items": "string",
+          "description": "Assigned passenger IDs"
+        },
+        "status": {
+          "type": "enum",
+          "required": false,
+          "default": "planned",
+          "values": ["planned", "in-progress", "completed", "cancelled"],
+          "description": "VAPP status"
+        },
+        "notes": {
+          "type": "string",
+          "required": false,
+          "description": "Additional notes"
+        }
+      }
+    },
+    "ShuttleSystem": {
+      "description": "Shuttle system parsing schema",
+      "extends": "BaseParsedData",
+      "fields": {
+        "shuttleId": {
+          "type": "string",
+          "required": true,
+          "description": "Unique shuttle identifier"
+        },
+        "eventId": {
+          "type": "string",
+          "required": true,
+          "description": "Associated event ID"
+        },
+        "routeName": {
+          "type": "string",
+          "required": true,
+          "description": "Shuttle route name"
+        },
+        "vehicleId": {
+          "type": "string",
+          "required": true,
+          "description": "Assigned vehicle ID"
+        },
+        "driverId": {
+          "type": "string",
+          "required": true,
+          "description": "Assigned driver ID"
+        },
+        "schedule": {
+          "type": "object",
+          "required": true,
+          "fields": {
+            "startTime": "date",
+            "endTime": "date",
+            "frequency": "number:min1",
+            "stops": "array:object"
+          },
+          "description": "Shuttle schedule"
+        },
+        "capacity": {
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "description": "Shuttle capacity"
+        },
+        "currentPassengers": {
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "description": "Current passenger count"
+        },
+        "status": {
+          "type": "enum",
+          "required": false,
+          "default": "active",
+          "values": ["active", "inactive", "maintenance"],
+          "description": "Shuttle status"
+        },
+        "notes": {
+          "type": "string",
+          "required": false,
+          "description": "Additional notes"
+        }
+      }
+    }
+  },
+  "metadata": {
+    "version": "1.0.0",
+    "totalSchemas": 20,
+    "baseSchema": "BaseParsedData",
+    "categories": {
+      "Event Management": ["Event", "EventAccommodation"],
+      "Passenger Management": ["Passenger"],
+      "Fleet Management": ["Vehicle", "Driver"],
+      "Transport Schedules": ["TransportSchedule", "FlightSchedule", "HotelTransportation"],
+      "Task Management": ["Task"],
+      "Document Management": ["Document"],
+      "Visa Management": ["Visa"],
+      "AAD Management": ["AAD"],
+      "Statistics and Reports": ["StaffStatistics", "TransportReport"],
+      "Planning and Coordination": ["VAPP", "ShuttleSystem"]
+    },
+    "fieldTypes": {
+      "string": "Text data",
+      "number": "Numeric data",
+      "date": "Date and time data",
+      "boolean": "True/false values",
+      "enum": "Predefined value options",
+      "array": "List of values",
+      "object": "Nested object structure",
+      "email": "Email address format"
+    },
+    "validationRules": {
+      "required": "Field must be present",
+      "optional": "Field can be omitted",
+      "min": "Minimum value constraint",
+      "max": "Maximum value constraint",
+      "default": "Default value if not provided",
+      "extends": "Inherits from base schema"
+    }
+  }
+}

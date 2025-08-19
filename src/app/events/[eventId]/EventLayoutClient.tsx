@@ -14,7 +14,7 @@ export default function EventLayoutClient({ children, eventId }: EventLayoutClie
       eventId={eventId}
       title="Event Management"
       subtitle="Transport Reporting System"
-      showBackButton={true}
+      showBackButton={false}
       backUrl="/dashboard"
     >
       {children}
