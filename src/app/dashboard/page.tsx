@@ -1,222 +1,372 @@
 'use client'
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
-import { Container } from '@/components/layout/Container'
-import { Plane, LogOut, User, Clock } from 'lucide-react'
-import { useAuth } from '@/contexts/AuthContext'
-import { ProtectedRoute } from '@/components/auth/ProtectedRoute'
-// import { useState, useEffect } from 'react'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { Badge } from '@/components/ui/badge'
+import { Input } from '@/components/ui/input'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { 
+  Plus, 
+  Search, 
+  Calendar, 
+  Users, 
+  Truck, 
+  MapPin, 
+  Edit, 
+  Trash2, 
+  Eye
+} from 'lucide-react'
+import { toast } from 'sonner'
+import EventFormModal from './EventFormModal'
 
-// interface SessionAnalytics {
-//   totalSessions: number
-//   activeSessions: number
-//   redisSessions: number
-//   memorySessions: number
-//   totalActive: number
-//   uptime: number
-//   lastUpdated: string
-// }
+interface Event {
+  id: string
+  name: string
+  description: string
+  guestNumber: number
+  venue: string
+  fleet: number
+  country: string
+  hotels: string[]
+  destinations: string[]
+  vapp: number
+  startDate: string
+  endDate: string
+  status: 'planning' | 'active' | 'completed' | 'cancelled'
+  organizer: string
+  createdAt: string
+  updatedAt: string
+}
 
-export default function DashboardPage() {
-  const { user, logout } = useAuth()
-  console.log('user', user)
-  // const [analytics, setAnalytics] = useState<SessionAnalytics | null>(null)
-  // const [isLoadingAnalytics, setIsLoadingAnalytics] = useState(false)
+export default function EventsPage() {
+  const router = useRouter()
+  const [events, setEvents] = useState<Event[]>([
+    {
+      id: '1',
+      name: 'Summer Aviation Conference 2024',
+      description: 'Annual aviation industry conference bringing together professionals from across the sector',
+      guestNumber: 5000,
+      venue: 'International Airport Conference Center',
+      fleet: 150,
+      country: 'United States',
+      hotels: ['Grand Hotel Downtown', 'Luxury Resort', 'Business Center Hotel'],
+      destinations: ['International Airport', 'Conference Center', 'Downtown Area'],
+      vapp: 5000,
+      startDate: '2024-07-15',
+      endDate: '2024-07-17',
+      status: 'active',
+      organizer: 'Sarah Johnson',
+      createdAt: '2024-01-15',
+      updatedAt: '2024-01-15'
+    },
+    {
+      id: '2',
+      name: 'Tech Innovation Summit',
+      description: 'Technology innovation summit for industry leaders and startups',
+      guestNumber: 3000,
+      venue: 'Tech Convention Center',
+      fleet: 100,
+      country: 'United States',
+      hotels: ['Tech Hotel', 'Innovation Inn'],
+      destinations: ['Tech District', 'Convention Center'],
+      vapp: 3000,
+      startDate: '2024-08-20',
+      endDate: '2024-08-22',
+      status: 'planning',
+      organizer: 'Mike Davis',
+      createdAt: '2024-01-20',
+      updatedAt: '2024-01-20'
+    }
+  ])
 
-  const handleLogout = async () => {
-    try {
-      await logout()
-    } catch (error) {
-      console.error('Logout failed:', error)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [statusFilter, setStatusFilter] = useState('all')
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null)
+
+  // Filter events based on search and status
+  const filteredEvents = events.filter(event => {
+    const matchesSearch = event.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         event.venue.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         event.organizer.toLowerCase().includes(searchTerm.toLowerCase())
+    const matchesStatus = statusFilter === 'all' || event.status === statusFilter
+    return matchesSearch && matchesStatus
+  })
+
+  const getStatusBadge = (status: Event['status']) => {
+    const statusConfig = {
+      planning: { variant: 'secondary', label: 'Planning' },
+      active: { variant: 'default', label: 'Active' },
+      completed: { variant: 'outline', label: 'Completed' },
+      cancelled: { variant: 'destructive', label: 'Cancelled' }
+    }
+    
+    const config = statusConfig[status]
+    return <Badge variant={config.variant as "default" | "secondary" | "destructive" | "outline"}>{config.label}</Badge>
+  }
+
+  const handleCreateEvent = (eventData: Omit<Event, 'id' | 'createdAt' | 'updatedAt'>) => {
+    const newEvent: Event = {
+      ...eventData,
+      id: Date.now().toString(),
+      createdAt: new Date().toISOString().split('T')[0],
+      updatedAt: new Date().toISOString().split('T')[0]
+    }
+    
+    setEvents(prev => [newEvent, ...prev])
+    setIsCreateModalOpen(false)
+    toast.success('Event created successfully!')
+    
+    // Redirect to the newly created event page
+    router.push(`/event/${newEvent.id}`)
+  }
+
+  const handleEditEvent = (eventData: Event) => {
+    setEvents(prev => prev.map(event => 
+      event.id === eventData.id 
+        ? { ...eventData, updatedAt: new Date().toISOString().split('T')[0] }
+        : event
+    ))
+    setIsEditModalOpen(false)
+    setSelectedEvent(null)
+    toast.success('Event updated successfully!')
+  }
+
+  const handleDeleteEvent = (eventId: string) => {
+    if (confirm('Are you sure you want to delete this event? This action cannot be undone.')) {
+      setEvents(prev => prev.filter(event => event.id !== eventId))
+      toast.success('Event deleted successfully!')
     }
   }
 
-  // const fetchAnalytics = async () => {
-  //   try {
-  //     setIsLoadingAnalytics(true)
-  //     const response = await fetch('/api/auth/analytics', {
-  //       method: 'POST',
-  //       headers: { 'Content-Type': 'application/json' },
-  //       body: JSON.stringify({}),
-  //     })
-      
-  //     if (!response.ok) {
-  //       throw new Error(`HTTP error! status: ${response.status}`)
-  //     }
-      
-  //     const data = await response.json()
-  //     console.log('Analytics response:', data)
-      
-  //     if (data.result && data.result.status === 'fulfilled') {
-  //       setAnalytics(data.result.response)
-  //     } else {
-  //       console.error('Analytics failed:', data)
-  //     }
-  //   } catch (error) {
-  //     console.error('Failed to fetch analytics:', error)
-  //   } finally {
-  //     setIsLoadingAnalytics(false)
-  //   }
-  // }
+  const openEditModal = (event: Event) => {
+    setSelectedEvent(event)
+    setIsEditModalOpen(true)
+  }
 
-  // useEffect(() => {
-  //   fetchAnalytics()
-  //   // Refresh analytics every 30 seconds
-  //   const interval = setInterval(fetchAnalytics, 30000)
-  //   return () => clearInterval(interval)
-  // }, [])
-
-  // const formatUptime = (seconds: number) => {
-  //   const hours = Math.floor(seconds / 3600)
-  //   const minutes = Math.floor((seconds % 3600) / 60)
-  //   return `${hours}h ${minutes}m`
-  // }
+  const viewEvent = (eventId: string) => {
+    router.push(`/event/${eventId}`)
+  }
 
   return (
-    <ProtectedRoute>
-      <div className="min-h-screen bg-background">
-        <Container className="py-8">
-          <div className="flex justify-between items-center mb-8">
-            <div className="flex items-center space-x-3">
-              <Plane className="h-8 w-8 text-primary" />
-              <h1 className="text-3xl font-bold">Transport Reporting System</h1>
-            </div>
-            <Button onClick={handleLogout} variant="outline">
-              <LogOut className="h-4 w-4 mr-2" />
-              Logout
+    <div className="container mx-auto p-6 space-y-6">
+      {/* Navigation Header */}
+      {/* <div className="flex items-center gap-4 mb-6">
+        <div className="flex-1" />
+        <Button variant="outline" onClick={() => router.push('/data-parser')}>
+          Data Parser
+        </Button>
+      </div> */}
+
+      {/* Page Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Event Management</h1>
+          <p className="text-muted-foreground mt-2">
+            Create and manage events with transport coordination
+          </p>
+        </div>
+        <Dialog open={isCreateModalOpen} onOpenChange={setIsCreateModalOpen}>
+          <DialogTrigger asChild>
+            <Button variant="outline" className="flex items-center gap-2">
+              <Plus className="h-4 w-4" />
+              Create New Event
             </Button>
-          </div>
-
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <User className="h-5 w-5 mr-2" />
-                  User Profile
-                </CardTitle>
-                <CardDescription>Your account information</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  <div>
-                    <span className="font-medium">Email:</span>
-                    <p className="text-sm text-muted-foreground">{user?.email}</p>
-                  </div>
-                  {user?.username && (
-                    <div>
-                      <span className="font-medium">Username:</span>
-                      <p className="text-sm text-muted-foreground">{user.username}</p>
-                    </div>
-                  )}
-                  <div>
-                    <span className="font-medium">Role:</span>
-                    <p className="text-sm text-muted-foreground">
-                      {user?.isAdmin ? 'Administrator' : 'User'}
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Activity className="h-5 w-5 mr-2" />
-                  Session Analytics
-                </CardTitle>
-                <CardDescription>System session information</CardDescription>
-              </CardHeader>
-              <CardContent>
-                {isLoadingAnalytics ? (
-                  <div className="animate-pulse space-y-2">
-                    <div className="h-4 bg-gray-200 rounded"></div>
-                    <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-                    <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-                  </div>
-                ) : analytics ? (
-                  <div className="space-y-2">
-                    <div className="flex justify-between">
-                      <span>Active Sessions:</span>
-                      <span className="font-medium">{analytics.totalActive}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Redis Sessions:</span>
-                      <span className="text-sm text-muted-foreground">{analytics.redisSessions}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Memory Sessions:</span>
-                      <span className="text-sm text-muted-foreground">{analytics.memorySessions}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Server Uptime:</span>
-                      <span className="text-sm text-muted-foreground">{formatUptime(analytics.uptime)}</span>
-                    </div>
-                  </div>
-                ) : (
-                  <p className="text-sm text-muted-foreground">Failed to load analytics</p>
-                )}
-              </CardContent>
-            </Card> */}
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Quick Actions</CardTitle>
-                <CardDescription>Common tasks and shortcuts</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  <Button className="w-full" variant="outline">
-                    View Events
-                  </Button>
-                  <Button className="w-full" variant="outline">
-                    Create Report
-                  </Button>
-                  <Button className="w-full" variant="outline">
-                    Manage Passengers
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Clock className="h-5 w-5 mr-2" />
-                  System Status
-                </CardTitle>
-                <CardDescription>Current system information</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span>Status:</span>
-                    <span className="text-green-600">Online</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Last Login:</span>
-                    <span className="text-sm text-muted-foreground">Just now</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Session ID:</span>
-                    <span className="text-xs text-muted-foreground font-mono">
-                      {user?.sessionId || 'N/A'}
-                    </span>
-                  </div>
-                  {/* {analytics && (
-                    <div className="flex justify-between">
-                      <span>Last Updated:</span>
-                      <span className="text-xs text-muted-foreground">
-                        {new Date(analytics.lastUpdated).toLocaleTimeString()}
-                      </span>
-                    </div>
-                  )} */}
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </Container>
+          </DialogTrigger>
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <Plus className="h-5 w-5" />
+                Create New Event
+              </DialogTitle>
+              <DialogDescription>
+                Fill out the form below to create a new event
+              </DialogDescription>
+            </DialogHeader>
+            <EventFormModal
+              mode="create"
+              onSubmit={handleCreateEvent}
+              onClose={() => setIsCreateModalOpen(false)}
+            />
+          </DialogContent>
+        </Dialog>
       </div>
-    </ProtectedRoute>
+
+      {/* Search and Filters */}
+      <Card>
+        <CardContent className="pt-6">
+          <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex-1">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Search events by name, venue, or organizer..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Filter by status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Statuses</SelectItem>
+                  <SelectItem value="planning">Planning</SelectItem>
+                  <SelectItem value="active">Active</SelectItem>
+                  <SelectItem value="completed">Completed</SelectItem>
+                  <SelectItem value="cancelled">Cancelled</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+
+
+      {/* Events Table */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Events</CardTitle>
+          <CardDescription>
+            {filteredEvents.length} event{filteredEvents.length !== 1 ? 's' : ''} found
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {filteredEvents.length === 0 ? (
+            <div className="text-center py-8 text-muted-foreground">
+              {events.length === 0 ? 'No events created yet. Create your first event above.' : 'No events match your search criteria.'}
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Event Name</TableHead>
+                    <TableHead>Start Date</TableHead>
+                    <TableHead>End Date</TableHead>
+                    <TableHead>Guests</TableHead>
+                    <TableHead>Fleet</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Organizer</TableHead>
+                    <TableHead>Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredEvents.map((event) => (
+                    <TableRow key={event.id}>
+                      <TableCell>
+                        <div>
+                          <div className="font-medium">{event.name}</div>
+                          <div className="text-sm text-muted-foreground line-clamp-2">
+                            {event.description}
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                        <Calendar className="h-4 w-4 text-muted-foreground" />
+                        <div>{event.endDate}</div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <Calendar className="h-4 w-4 text-muted-foreground" />
+                          <div className="text-sm">
+                            <div>{event.startDate}</div>
+                            {/* <div className="text-muted-foreground">to {event.endDate}</div> */}
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <Users className="h-4 w-4 text-muted-foreground" />
+                          <span>{event.guestNumber.toLocaleString()}</span>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <Truck className="h-4 w-4 text-muted-foreground" />
+                          <span>{event.fleet}</span>
+                        </div>
+                      </TableCell>
+                      <TableCell>{getStatusBadge(event.status)}</TableCell>
+                      <TableCell>{event.organizer}</TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => viewEvent(event.id)}
+                          >
+                            <Eye className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => openEditModal(event)}
+                          >
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleDeleteEvent(event.id)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Edit Event Modal */}
+      <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Edit className="h-5 w-5" />
+              Edit Event: {selectedEvent?.name}
+            </DialogTitle>
+            <DialogDescription>
+              Update event information and settings
+            </DialogDescription>
+          </DialogHeader>
+          {selectedEvent && (
+            <EventFormModal
+              mode="edit"
+              event={selectedEvent}
+              onSubmit={(eventData) => {
+                const fullEventData: Event = {
+                  ...eventData,
+                  id: selectedEvent.id,
+                  createdAt: selectedEvent.createdAt,
+                  updatedAt: new Date().toISOString().split('T')[0]
+                }
+                handleEditEvent(fullEventData)
+              }}
+              onClose={() => {
+                setIsEditModalOpen(false)
+                setSelectedEvent(null)
+              }}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
+    </div>
   )
-} 
+}

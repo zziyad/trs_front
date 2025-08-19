@@ -106,38 +106,38 @@ export function Sidebar({ eventId, items, isOpen, onToggle }: SidebarProps) {
     { 
       icon: BarChart3, 
       label: 'Dashboard', 
-      href: `/events/${eventId}`, 
-      active: pathname === `/events/${eventId}` 
+      href: `/event/${eventId}`, 
+      active: pathname === `/event/${eventId}` 
     },
     {
       icon: Users,
       label: 'Staff Statistics',
-      href: `/events/${eventId}/staff-statistics`,
-      active: pathname === `/events/${eventId}/staff-statistics`
+      href: `/event/${eventId}/staff-statistics`,
+      active: pathname === `/event/${eventId}/staff-statistics`
     },
     {
       icon: ClipboardList,
       label: 'AAD',
-      href: `/events/${eventId}/aad`,
-      active: pathname === `/events/${eventId}/aad`
+      href: `/event/${eventId}/aad`,
+      active: pathname === `/event/${eventId}/aad`
     },
     { 
       icon: Calendar, 
       label: 'Flight Schedule', 
-      href: `/events/${eventId}/flight-schedules`, 
-      active: pathname === `/events/${eventId}/flight-schedules` 
+      href: `/event/${eventId}/flight-schedules`, 
+      active: pathname === `/event/${eventId}/flight-schedules` 
     },
     { 
       icon: FileText, 
       label: 'Transport Reports', 
-      href: `/events/${eventId}/transport-reports`, 
-      active: pathname === `/events/${eventId}/transport-reports` 
+      href: `/event/${eventId}/transport-reports`, 
+      active: pathname === `/event/${eventId}/transport-reports` 
     },
         {
       icon: Clock,
       label: 'Real-Time Status',
-      href: `/events/${eventId}/status`,
-      active: pathname === `/events/${eventId}/status`
+      href: `/event/${eventId}/status`,
+      active: pathname === `/event/${eventId}/status`
     },
     { 
       icon: Building, 
@@ -148,14 +148,14 @@ export function Sidebar({ eventId, items, isOpen, onToggle }: SidebarProps) {
         { 
           icon: Settings, 
           label: 'Hotel Transport Operation', 
-          href: `/events/${eventId}/hotel-transportation/operation`, 
-          active: pathname === `/events/${eventId}/hotel-transportation/operation` 
+          href: `/event/${eventId}/hotel-transportation/operation`, 
+          active: pathname === `/event/${eventId}/hotel-transportation/operation` 
         },
         { 
           icon: Users, 
           label: 'Passengers', 
-          href: `/events/${eventId}/hotel-transportation/passengers`, 
-          active: pathname === `/events/${eventId}/hotel-transportation/passengers` 
+          href: `/event/${eventId}/hotel-transportation/passengers`, 
+          active: pathname === `/event/${eventId}/hotel-transportation/passengers` 
         }
       ]
     },
@@ -168,34 +168,34 @@ export function Sidebar({ eventId, items, isOpen, onToggle }: SidebarProps) {
         { 
           icon: UserCheck, 
           label: 'Driver Management', 
-          href: `/events/${eventId}/fleet-management/drivers`, 
-          active: pathname === `/events/${eventId}/fleet-management/drivers` 
+          href: `/event/${eventId}/fleet-management/drivers`, 
+          active: pathname === `/event/${eventId}/fleet-management/drivers` 
         },
         { 
           icon: Database, 
           label: 'Fleet ID', 
-          href: `/events/${eventId}/fleet-management/fleet-id`, 
-          active: pathname === `/events/${eventId}/fleet-management/fleet-id` 
+          href: `/event/${eventId}/fleet-management/fleet-id`, 
+          active: pathname === `/event/${eventId}/fleet-management/fleet-id` 
         },
         { 
           icon: ClipboardList, 
           label: 'Fleet Assignment', 
-          href: `/events/${eventId}/fleet-management/assignment`, 
-          active: pathname === `/events/${eventId}/fleet-management/assignment` 
+          href: `/event/${eventId}/fleet-management/assignment`, 
+          active: pathname === `/event/${eventId}/fleet-management/assignment` 
         },
         { 
           icon: Settings, 
           label: 'Commissioning & De-commissioning', 
-          href: `/events/${eventId}/fleet-management/commissioning`, 
-          active: pathname === `/events/${eventId}/fleet-management/commissioning` 
+          href: `/event/${eventId}/fleet-management/commissioning`, 
+          active: pathname === `/event/${eventId}/fleet-management/commissioning` 
         }
       ]
     },
     {
       icon: ClipboardList,
       label: 'VAPP',
-      href: `/events/${eventId}/vapp`,
-      active: pathname === `/events/${eventId}/vapp`
+      href: `/event/${eventId}/vapp`,
+      active: pathname === `/event/${eventId}/vapp`
     },
     { 
       icon: Plane, 
@@ -206,34 +206,34 @@ export function Sidebar({ eventId, items, isOpen, onToggle }: SidebarProps) {
         { 
           icon: CreditCard, 
           label: 'Visa', 
-          href: `/events/${eventId}/visa`, 
-          active: pathname === `/events/${eventId}/visa` 
+          href: `/event/${eventId}/visa`, 
+          active: pathname === `/event/${eventId}/visa` 
         },
         { 
           icon: Bed, 
           label: 'Accommodation', 
-          href: `/events/${eventId}/accommodation`, 
-          active: pathname === `/events/${eventId}/accommodation` 
+          href: `/event/${eventId}/accommodation`, 
+          active: pathname === `/event/${eventId}/accommodation` 
         },
         { 
           icon: Ticket, 
           label: 'Air Ticket', 
-          href: `/events/${eventId}/air-ticket`, 
-          active: pathname === `/events/${eventId}/air-ticket` 
+          href: `/event/${eventId}/air-ticket`, 
+          active: pathname === `/event/${eventId}/air-ticket` 
         }
       ]
     },
     { 
       icon: Bus, 
       label: 'Shuttle System', 
-      href: `/events/${eventId}/shuttle-system`, 
-      active: pathname === `/events/${eventId}/shuttle-system` 
+      href: `/event/${eventId}/shuttle-system`, 
+      active: pathname === `/event/${eventId}/shuttle-system` 
     },
     { 
       icon: CheckSquare, 
       label: 'Tasks', 
-      href: `/events/${eventId}/tasks`, 
-      active: pathname === `/events/${eventId}/tasks` 
+      href: `/event/${eventId}/tasks`, 
+      active: pathname === `/event/${eventId}/tasks` 
     }
   ]
 
